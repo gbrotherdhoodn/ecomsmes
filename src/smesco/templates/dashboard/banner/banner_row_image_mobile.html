@@ -1,0 +1,13 @@
+{% load thumbnail %}
+
+{% if record.image_mobile.url %}
+	{% with image=record.image_mobile %}
+		{% thumbnail image "70x70" upscale=False as thumb %}
+		<a href="{{ image.url }}" target="_blank">
+			<img src="{{ thumb.url }}" alt="{{ record.image.name }}" >
+		</a>
+		{% endthumbnail %}
+	{% endwith %}
+{% else %}
+	— 
+{% endif %}

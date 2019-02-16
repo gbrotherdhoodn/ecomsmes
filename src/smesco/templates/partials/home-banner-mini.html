@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% if data %}
+    <section id="mini-banner">
+        <div class="gdn-title">
+            <h4 class="text-title-3 text-title-4 text-black">
+                Pilihan Kami
+            </h4>
+        </div>
+        <div class="row">
+            {% for banner_data in data %}
+                <article class="col-lg-6 col-sm-6 col-xs-6">
+                    <figure>
+                        <picture>
+                            <a href="{{ banner_data.url }}">
+                                {% thumbnail banner_data.image "700x524" upscale=False as thumb %}
+                                    <img src="{{ thumb.url }}" alt="{{ banner_data.title }}">
+                                {% endthumbnail %}
+                            </a>
+                        </picture>
+                    </figure>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}

@@ -1,0 +1,23 @@
+- name: Install psycopg2
+  pip:
+    name: "{{item}}"
+    state: present
+    executable: pip3
+  with_items:
+    - psycopg2
+
+- name: Create Postgres User
+  postgresql_user:
+    name: "{{ app_name }}"
+    password: "{{ db_pass }}"
+    encrypted: yes
+    role_attr_flags: CREATEDB,LOGIN
+  become_user: postgres
+  when: app_role != "production"
+
+- name: Create app database
+  postgresql_db:
+    name: "{{ app_name }}"
+    owner: "{{ app_name }}"
+  become_user: postgres
+  when: app_role != "production"

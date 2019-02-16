@@ -1,0 +1,28 @@
+.gdn-icon-logo {
+    background: url("/static/img/logo/logo.svg") transparent no-repeat;
+    background-position: 50%;
+    background-size: 190px 55px;
+    width: 190px;
+    display: block;
+    height: 55px;
+    text-indent: -99999px;
+    font-size: 0;
+}
+
+@media screen and (max-width: @m-break) {
+    .gdn-icon-logo {
+        background-position: 100%;
+        background-size: 90px 30px;
+        background: url("/static/img/logo/logo-mobile.svg") transparent no-repeat;
+        width: 90px;
+        display: block;
+        height: 30px;
+
+        &-checkout {
+            background-size: 182px 65px;
+            width: 182px;
+            display: block;
+            height: 65px;
+        }
+    }
+}

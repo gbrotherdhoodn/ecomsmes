@@ -1,0 +1,37 @@
+{% load staticfiles %}
+
+<section id="{{ id }}">
+    <div class="row center-xs">
+        <div class="{{ grid }}">
+            <article>
+                <figure>
+                    <div class="row center-xs">
+                        <div class="
+                            {% if imageclass %}{{ imageclass }}{% else %}col-lg-12 col-sm-12 col-xs-12{% endif %}">
+                            <picture>
+                                <img src="{% static "img/image-not-found/" %}{{ image }}" alt="">
+                            </picture>
+                        </div>
+                    </div>
+                    <figcaption>
+                        <p class="text-paragraph">
+                            {{ wording }}
+                        </p>
+                        {% if js %}
+                            <a href=""
+                               data-modal="{{ js }}"
+                               class="open-modal btn btn-primary {{ js_class }}">
+                                {{ button_name }}
+                            </a>
+                        {% else %}
+                            <a href="{% if href %} {% url href %} {% else %} {{ url }} {% endif %}"
+                               class="btn btn-black">
+                                {{ button_name }}
+                            </a>
+                        {% endif %}
+                    </figcaption>
+                </figure>
+            </article>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,50 @@
+{% load staticfiles %}
+
+{% if data %}
+    <section id="testimonial">
+        <div class="container">
+            <div class="gdn-title">
+                <h4 class="text-title-3 text-title-4 text-black">
+                    Favorit Selebriti
+                </h4>
+            </div>
+        </div>
+        <div class="container container-mobile-full">
+            <div class="gdn-slider">
+                <div class="swiper-container slider-home-testi">
+                    <div class="swiper-wrapper">
+                        {% for item in data %}
+                            <div class="swiper-slide">
+                                <article class="gdn-home-testi d-block">
+                                    <figure>
+                                        <picture>
+                                            <img src="{{ item.image.url }}" alt="">
+                                        </picture>
+                                        <figcaption>
+                                            <h4 class="text-black text-heading-3 d-block text-center">
+                                                {{ item.description }}
+                                            </h4>
+                                            <a href="{{ item.url }}" target="_blank"><span
+                                                class="text-black text-body-1  d-block text-center">{{ item.name }}</span>
+                                            </a>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Add Arrows -->
+
+                    <div class="gdn-slider-button-left home-testi">
+                        <i class="fa fa-chevron-left "></i>
+                    </div>
+                    <div class="gdn-slider-button-right home-testi">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                    <div class="gdn-slider-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endif %}

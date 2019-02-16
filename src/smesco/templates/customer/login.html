@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Login or register' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li class="active">{% trans 'Login' %}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+
+    <div class="gdn-page">
+        <div class="container">
+            <div class="row between-lg reverse-sm reverse-xs reverse-row-lg">
+                <div class="col-lg-5 col-sm-12 col-xs-12 register_form">
+                    <h2 class="text-heading-1 text-heading-2">Keutungan Menjadi Member Jimshoney.com</h2>
+                    <div class="register-content">
+                        <p class="text-body-1">
+                            Dapatkan kenyamanan dengan Registrasi di Jimshoney.com:
+                        </p>
+                        <ul>
+                            <li>
+                                <p class="text-body-1">
+                                    Proses pembayaran yang lebih mudah
+                                </p>
+
+                            </li>
+                            <li>
+                                <p class="text-body-1">
+                                    Proses pembayaran yang lebih cepat
+                                </p>
+
+                            </li>
+                            <li>
+                                <p class="text-body-1">
+                                    Mudah mengakses status pesanan
+                                </p>
+
+                            </li>
+                            <li>
+                                <p class="text-body-1">
+                                    Mudah mengakses riwayat pesanan
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="{% url 'customer:register' %}" class="btn btn-block btn-secondary">Daftar Sekarang</a>
+                </div>
+                <div class="col-lg-2 col-sm-12 col-xs-12">
+                    <div class="login-separator"></div>
+                </div>
+                <div class="col-lg-5 col-sm-12 col-xs-12 login_form">
+                    <h2 class="text-heading-1 text-heading-2 with-margin-bottom">Selamat Datang</h2>
+                    <form id="login_form" action="{{ request.get_full_path }}" method="post" class="well gdn-form">
+                        {% csrf_token %}
+                        {% include "partials/form_fields.html" with form=login_form %}
+                        <div class="form-group">
+                            <button name="login_submit" type="submit" value="Log In" class="btn btn-block btn-black"
+                                    data-loading-text="{% trans "Logging in..." %}">Login
+                            </button>
+                        </div>
+                        <div class="d-block with-margin-bottom">
+                            <a class="btn btn-link " href="{% url 'password-reset' %}">Lupa Kata Sandi</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

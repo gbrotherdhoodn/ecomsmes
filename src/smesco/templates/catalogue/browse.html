@@ -1,0 +1,201 @@
+{% extends "layout_2_col.html" %}
+
+{% load basket_tags %}
+{% load category_tags %}
+{% load product_tags %}
+{% load function_tags %}
+{% load i18n %}
+
+{% block title %}
+    {% if summary %}{{ summary }} |{% endif %} {{ block.super }}
+{% endblock %}
+
+{% block headertext %}
+    {#    {{ summary }}#}
+
+{% endblock %}
+
+{% block alert_message %}
+    {% include "partials/alert_messages.html" %}
+{% endblock alert_message %}
+
+{% block breadcrumbs %}
+    <div class="d-flex between-xs">
+        <ul class="gdn-breadcrumb">
+            <li>
+                <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+            </li>
+            <li class="active">{{ summary }}</li>
+        </ul>
+        <div class="gdn-total-product">
+            <span class="text-body-1 text-black">
+                {% if paginator.count %}
+                    {% if paginator.num_pages > 1 %}
+                        {% blocktrans with start=page_obj.start_index end=page_obj.end_index count num_results=paginator.count %}
+                            {{ num_results }} result - dari {{ start }} hingga {{ end }}
+                        {% plural %}
+                            Total {{ num_results }} Produk - dari {{ start }} hingga {{ end }}
+                        {% endblocktrans %}
+                    {% else %}
+                        {% blocktrans count num_results=paginator.count %}
+                            Total {{ num_results }} Produk
+                        {% plural %}
+                            Total {{ num_results }} Produk
+                        {% endblocktrans %}
+                    {% endif %}
+                {% else %}
+                    Total 0 Produk
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock breadcrumbs %}
+
+{% block column_left %}
+    <div class="filter-mobile">
+        <div class="row">
+            <div class="col-lg-12 col-xs-12 col-sm-12">
+                <form method="get" class="form-sort">
+                    {% for value in selected_facets %}
+                        <input type="hidden" name="selected_facets" value="{{ value }}"/>
+                    {% endfor %}
+                    <input type="hidden" name="q" value="{{ search_form.q.value|default_if_none:"" }}"/>
+                    {% if paginator.count %}
+                        {% if form %}
+                            {% include "partials/form_field.html" with field=form.sort_by label_class="text-heading-3" %}
+                        {% endif %}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <ul class="ul-list-none block-li gdn-sidebar">
+            <li>
+                {% category_tree as tree_categories %}
+                {% if tree_categories %}
+                    <div class="gdn-category">
+                        <div class="gdn-category-header">
+                            <h4 class="text-heading-3 text-black">Kategori</h4>
+                            <i class="fa fa-angle-down"></i>
+                        </div>
+                        <div class="gdn-category-list parent-category">
+                            <ul class="ul-list-none block-li gdn-category-accordian">
+                                {% for tree_category, info in tree_categories %}
+                                    {% if tree_category.pk == category.pk %}
+                                        <li class="active-category">
+                                            {% else %}
+                                        <li>
+                                    {% endif %}
+                                <div class="gdn-category-accordian-button">
+                                    <a data-content="accordian-category" href="{{ tree_category.get_absolute_url }}">
+                                        {% if tree_category.pk == category.pk %}
+                                            <strong>{{ tree_category.name }}</strong>
+                                        {% else %}
+                                            <span>{{ tree_category.name }}</span>
+                                        {% endif %}
+                                    </a>
+                                    {% if info.has_children %}
+                                        <i class="fa fa-angle-down"></i>
+                                    {% endif %}
+                                </div>
+
+                                {% if info.has_children %}
+                                    <ul class="accordian-category gdn-category-list-sub">
+                                {% else %}
+                                    </li>
+                                {% endif %}
+                                {% for n in info.num_to_close %}
+                                    </ul></li>
+                                {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </li>
+            {# End Category Product List#}
+
+            {# Begin Price Product List#}
+            <li>
+                {% if has_facets %}
+                    <div class="side_categories">
+                        {% for field, data in facet_data.items %}
+                            {% if data.results %}
+                                {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                {% endif %}
+            </li>
+            {# End Price Product List#}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if products %}
+        <section id="product-list">
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-lg-4 col-sm-6 col-xs-6 with-margin-bottom">
+                        {% render_product product %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% include "partials/pagination.html" %}
+        </section>
+        <div class="sort-filter-mobile">
+            <div class="floating-button-center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a href="" class="btn btn-secondary btn-block open-filter-mobile">
+                                FILTER
+                            </a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a href="" class="btn btn-secondary btn-block open-sort-mobile">
+                                SORT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sort-product-list-mobile">
+                <ul class="gdn-list-none ul-list-none">
+                    {% for sort_mobile in search_form.SORT_BY_CHOICES %}
+                        {% with request|query_transform  as activeUrl %}
+                            <li class="{% if request.GET.sort_by == sort_mobile.0 %}active-sort{% endif %}">
+                                <a class="sort_by_mobile" data-value-choice="{{ sort_mobile.0 }}">
+                        <span>
+                            {{ tree_category.get_absolute_url }}{{ sort_mobile.1 }}
+                        </span>
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        {% endwith %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    {% else %}
+        {% with "Maaf, Produk Ketegori ini belum tersedia... Yuk temukan lagi produk insiprasi kamu" as wording %}
+            {% include "partials/data-not-found.html" with id="product-list-not-found" wording=wording button_name="Temukan Lagi" id="product-list-not-found" image="product-not-found.png" grid="col-lg-7" %}
+        {% endwith %}
+    {% endif %}
+
+{% endblock content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    var price_search_data = {
+    min_category_price: parseInt("{{ facet_data.price_range.results.min_category_price }}".replace(/\./g,'')),
+    max_category_price: parseInt("{{ facet_data.price_range.results.max_category_price }}".replace(/\./g,'')),
+    dynamic_query_fields: JSON.parse("[\u0022price_exact\u0022]")
+    }
+    oscar.search.init(price_search_data);
+    oscar.productList.init();
+
+{% endblock %}

@@ -1,0 +1,6 @@
+{% load i18n %}
+
+Halo, {{ user.first_name }}
+Selamat bergabung dengan jimshoney.com, eCommerce fashion terpercaya di Indonesia.
+Jadilah dirimu sendiri dan penuhi gaya mu dengan Jims Honey, keamanan belanja online terjamin dengan metode pembayaran yang beragam. Banyak pilihan produk dengan barang yang berkualitas dan harga yang berteman dengan kantong.
+Pastikan Anda berlangganan newsletter kami untuk mengikuti berita & penawaran terbaru!

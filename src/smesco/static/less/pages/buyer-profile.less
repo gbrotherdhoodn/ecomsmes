@@ -1,0 +1,178 @@
+.gdn-profile {
+    .profile-nav {
+        width: 100%;
+        display: block;
+        margin: 12px 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        font-size: 0;
+    }
+
+    .profile-tab {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 10px;
+
+        > li {
+            display: inline-block;
+
+            a {
+                opacity: 0.32;
+                margin-right: 10px;
+                font-family: @font-secondary;
+                font-size: 20px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.2;
+                letter-spacing: normal;
+                color: @black;
+                padding: 8px;
+                border-bottom: 2px solid transparent;
+
+                &:hover {
+                    color: darken(@black, 10%);
+                }
+            }
+
+            &.active {
+                a {
+                    opacity: 1;
+                    border-bottom: 2px solid @black;
+                }
+
+            }
+        }
+    }
+
+    .box-buyer-profile {
+        span {
+            padding: 11px 8px;
+        }
+
+        .row {
+            &:nth-child(even) {
+                background-color: @primary-light;
+            }
+        }
+    }
+
+    .order-list {
+        .order-list-row {
+            padding: 10px;
+            border: 1px solid @light-grey;
+
+
+            button {
+                padding: 8px;
+            }
+
+            .button-free {
+                height: 32px;
+            }
+        }
+
+        &-flag {
+            font-family: @font-primary;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
+            padding: 8px;
+        }
+
+    }
+
+    .order-detail {
+
+    }
+
+    .address-list-box {
+        padding: 20px;
+        border-bottom: 1px solid @black;
+    }
+
+    .addres-list-button {
+        display: block;
+        margin-top: 35px;
+
+        ul {
+            li {
+                padding-right: 5px;
+                border-right: 1px solid @black;
+
+                &:not(:first-child) {
+                    padding-left: 12px
+                }
+
+                &:last-child {
+                    border: none;
+                }
+
+                a, span {
+                    font-size: 18px;
+                    font-weight: normal;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.78;
+                    letter-spacing: 0.6px;
+                    margin-right: 10px;
+                    padding: 0;
+                    border: 0;
+                }
+            }
+        }
+    }
+
+
+}
+
+.address-data {
+    > div {
+        &:first-child {
+            > span {
+                font-size: 20px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.2;
+                letter-spacing: normal;
+
+            }
+        }
+    }
+
+}
+
+@media screen and (max-width: @m-break) {
+    .gdn-profile {
+        .order-list {
+            .flag {
+                text-align: right;
+            }
+
+            &-flag {
+                padding: 2px 8px;
+            }
+
+            .order-list-row {
+                .button-free {
+                    height: 0;
+                }
+            }
+        }
+
+        .margin {
+            margin-bottom: 10px;
+        }
+
+        .address-list-box {
+            padding: 20px 0;
+        }
+    }
+}

@@ -1,0 +1,10 @@
+[Unit]
+After=uwsgi-emperor.service
+
+[Service]
+User={{ app_user }}
+Group={{ app_user }}
+ExecStart="/opt/celery.sh"
+
+[Install]
+WantedBy=default.target

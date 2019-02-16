@@ -1,0 +1,8 @@
+{% load l10n %}
+
+<option value="">---------</option>
+{% if list %}
+    {% for val in list %}
+        <option value="{{ val.id|unlocalize }}">{{ val.name }}</option>
+    {% endfor %}
+{% endif %}

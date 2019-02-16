@@ -1,0 +1,4 @@
+---
+http_hostname: localhost
+is_local_dev: yes
+app_role: vagrant

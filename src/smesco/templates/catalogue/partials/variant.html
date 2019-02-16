@@ -1,0 +1,9 @@
+{% load purchase_info_tags %}
+<h2>Varian:</h2>
+<a href="#" style="color:black">{{ product.get_title }}</a><br>
+{% for child in other %}
+    {% purchase_info_for_product request child as child_session %}
+    {% if child.get_absolute_url != product.get_absolute_url %}
+        <a href="{{ child.get_absolute_url }}">{{ child.get_title }}</a><br>
+    {% endif %}
+{% endfor %}

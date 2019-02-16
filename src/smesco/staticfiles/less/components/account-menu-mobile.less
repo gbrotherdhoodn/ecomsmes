@@ -1,0 +1,50 @@
+.account-menu-mobile {
+    position: fixed;
+    z-index: 29;
+    top: 57px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.68);
+    opacity: 1;
+    will-change: opacity;
+    overflow: hidden;
+    transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1) 0s, z-index 0.1s linear 0s;
+    bottom: 49px;
+    display: none;
+
+    &.un-home {
+        top: 47px;
+        bottom: 0;
+        position: fixed;
+        z-index: 29;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.68);
+        opacity: 1;
+        will-change: opacity;
+        overflow: hidden;
+        transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1) 0s, z-index 0.1s linear 0s;
+        display: none;
+    }
+
+    > ul {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        > li {
+            display: block;
+            background-color: #fff;
+
+            > a {
+                padding: 10px 20px;
+                display: block;
+                width: 100%;
+                color: @black;
+            }
+        }
+    }
+}

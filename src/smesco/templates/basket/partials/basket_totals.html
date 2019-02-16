@@ -1,0 +1,57 @@
+{% load i18n %}
+{% load currency_filters %}
+{% load shipping_tags %}
+
+
+<div id="basket_totals">
+    {% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
+        {% block discount_totals %}
+            {% if offer_discounts or voucher_discounts %}
+                {% if voucher_discounts %}
+                    <tr>
+                        <th colspan="2"><h3>{% trans "Vouchers" %}</h3></th>
+                    </tr>
+                    {% for discount in voucher_discounts %}
+                        <tr>
+                            <td>
+                                {{ discount.voucher.name }} ({{ discount.voucher.code }})
+                                {% if editable %}
+                                    <form action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="{% trans 'Remove' %}"
+                                               class="btn btn-sm btn-danger"/>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+
+        {% block basket_total %}
+
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="text-body-1 d-block">
+                            {% if not show_tax_separately and basket.is_tax_known %}
+                                {{ basket.total_incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ basket.total_excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </span>
+                </div>
+                <div class="col-lg-12 col-sm-12 col-xs-12 with-margin-bottom">
+                    <span class="text-caption">Total Harga ({{ basket.num_items }} barang)</span>
+                </div>
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <a href="{% url 'checkout:index' %}"
+                       class="btn btn-black btn-block">Lanjutkan Pembayaran</a>
+                </div>
+            </div>
+        {% endblock %}
+    {% endwith %}
+
+</div>

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content_wrapper %}
+    <div class="container-fluid page">
+        <div class="gdn-page">
+            <div class="container">
+                {% block breadcrumbs %}{% endblock %}
+                <div class="row between-xs">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        {% block header %}
+                            <div class="page-header action">
+                                <h1>{% block headertext %}{% endblock %}</h1>
+                            </div>
+                        {% endblock %}
+                        {% include "partials/alert_messages.html" %}
+                        {% block content %}{% endblock %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

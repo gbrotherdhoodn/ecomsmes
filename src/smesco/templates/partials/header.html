@@ -1,0 +1,60 @@
+{% load i18n %}
+{% load category_tags %}
+
+<header class="header container-fluid">
+    <div class="header-top">
+        <div class="container">
+            <ul>
+                <li>
+                    <a href="" class="text-body-1 text-black">Tentang Jims Honey</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="gdn-dropdown">
+                        <a href="#" class="gdn-dropdown-button" data-id="dropdown-user">
+                            <span class="text-body-1 text-black">Hi, {{ user.get_short_name }}</span>
+                            <span class="gdn-dropdown-arrow"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                        </a>
+
+                        <div class="gdn-dropdown-content" id="dropdown-user">
+                            <a href="{% url 'customer:profile-view' %}" class="text-body-1 text-black">
+                                Informasi Saya
+                            </a>
+                            <a href="{% url 'customer:order-list' %}" class="text-body-1 text-black">
+                                Pesanan Saya
+                            </a>
+                            <a href="{% url 'customer:wishlists-list' %}" class="text-body-1 text-black">
+                                Favorit Saya
+                            </a>
+                            <a href="{% url 'customer:logout' %}" class="text-body-1 text-black">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'customer:login' %}" class="text-body-1 text-black">Masuk/Daftar</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header-bottom">
+            {% include "partials/nav_primary.html" %}
+        </div>
+    </div>
+
+    <div class="header-mobile">
+        <div class="container">
+            <nav>
+                <ul>
+                    <li>
+                        <a href=""><i class="fa ion-ios-search-strong text-grey"></i></a>
+                    </li>
+                    <li>
+
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

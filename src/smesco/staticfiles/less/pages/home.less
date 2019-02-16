@@ -1,0 +1,42 @@
+#mini-banner {
+    article {
+        margin-bottom: 15px;
+    }
+}
+
+.gdn-home {
+    &-banner {
+        display: block;
+        width: 100%;
+
+        &-mobile {
+            display: none;
+        }
+    }
+
+    &-testi {
+        figcaption {
+            padding: 15px 0;
+
+            span {
+                margin-bottom: 24px;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: @s-break) {
+    .gdn-home {
+        &-banner {
+            &-mobile {
+                display: block;
+            }
+
+            &-desktop {
+                display: none;
+            }
+        }
+    }
+}
+

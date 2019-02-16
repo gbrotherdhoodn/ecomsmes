@@ -1,0 +1,27 @@
+/* less/components/_color.less */
+
+@primary: #fddfe1;
+@accent: #fafabe;
+@notice: #d20a1e;
+@success: #32aa6e;
+@alert: #f4d143;
+@error: #fa3c50;
+@black: #3c3c46;
+@grey: #828282;
+@white: #ffffff;
+@light-grey: #dcdcdc;
+
+
+@primary-dark: #faa0aa; //#fbc2c6;
+@primary-light: lighten(@primary, 4%); //#fbfbd1;
+
+@accent-dark: darken(@accent, 6%); //#f8f8a2;
+@accent-light: lighten(@accent, 4%); //#fbfbd1;
+
+
+@colors: primary, accent, notice, success, alert, error, ~"black", light-grey,
+~"white", ~"grey", primary-dark, primary-light, accent-dark, accent-light;
+
+.loop-function-create-class("bg", "background-color", @colors); // BackgroundColor
+.loop-function-create-class("text", "color", @colors); // TextColor
+

@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<form {% if form_id %}id="{{ form_id }}"{% endif %} class="form-{{ style|default:"stacked" }} {{ class }}"
+      method="{{ method|default:"post" }}"
+      {% if action %}action="{{ action }}"{% endif %}
+      {% if includes_files %}enctype="multipart/form-data"{% endif %}>
+
+    {% if not method == "get" %}{% csrf_token %}{% endif %}
+    {% include 'partials/form_fields.html' %}
+    <div class="form-group">
+        <div class="{% if style == 'horizontal' %}col-sm-offset-4 col-sm-8{% endif %}">
+            <div class="with-margin-bottom">
+                <button class="btn btn-block btn-primary" type="submit"
+                        data-loading-text="Simpan...">Simpan
+                </button>
+            </div>
+            <div class="with-margin-bottom">
+                <a href="#" onclick="window.history.go(-1);return false"
+                   class="btn btn-link btn-block text-center" style="text-align: center">{% trans "cancel" %}</a>
+            </div>
+        </div>
+    </div>
+</form>

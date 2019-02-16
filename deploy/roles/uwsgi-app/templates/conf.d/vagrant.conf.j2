@@ -1,0 +1,38 @@
+upstream app
+{
+    server localhost:9000;
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80;
+    server_name {{ http_hostname }};
+
+    # used for letsencrypt challenges only
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+        try_files $uri $uri/ =404;
+    }
+
+    # everything else should redirect to HTTPS
+    location / {
+        add_header Pragma no-cache;
+        add_header Cache-Control "no-cache";
+        uwsgi_pass app;
+
+        proxy_read_timeout 180s;
+        proxy_send_timeout 180s;
+        include uwsgi_params;
+        sendfile on;
+        client_max_body_size    20M;
+        keepalive_timeout       0;
+    }
+
+    {% for loc in http_static_locations %}
+    location {{ loc.http_path }} {
+    expires 30d;
+    add_header Cache-Control "public";
+        alias {{ loc.dir_path }};
+    }
+    {% endfor %}
+}

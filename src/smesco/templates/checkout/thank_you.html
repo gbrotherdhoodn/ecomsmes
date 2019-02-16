@@ -1,0 +1,46 @@
+{% extends "checkout/layout.html" %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block title %}
+    {% blocktrans with number=order.number %}
+        Order {{ number }}: confirmation
+    {% endblocktrans %} | {{ block.super }}
+{% endblock title %}
+
+{% block checkout_nav %}
+{% endblock %}
+{% block sub_header %}
+
+{% endblock %}
+{% block checkout_title %}
+    {% blocktrans with number=order.number %}
+    {% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+    <div class="gdn-title">
+        <h1 class="text-title-3 text-title-4">
+            Terima Kasih, {{ user.first_name }}
+        </h1>
+    </div>
+
+    {% block thank_you %}
+        {% with order.sources.last as last_source %}
+            <div class="container">
+                {% if last_source.source_type.source_type != "credit_card" %}
+                    {% include 'checkout/thank-you-virtual-account.html' with order=order source=last_source %}
+                {% else %}
+                    {% include 'checkout/thank-you-credit-card.html' with order=order source=last_source %}
+                {% endif %}
+            </div>
+        {% endwith %}
+    {% endblock %}
+    {#    {% endwith %}#}
+{% endblock content %}
+
+{% block tracking %}
+    {% if send_analytics_event %}
+        {% include "partials/google_analytics_transaction.html" %}
+    {% endif %}
+{% endblock %}

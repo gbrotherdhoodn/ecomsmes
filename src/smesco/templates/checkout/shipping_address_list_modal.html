@@ -1,0 +1,44 @@
+{% load currency_filters %}
+{% load i18n %}
+{% load shipping_tags %}
+
+<section id="address-list-modal-data">
+    {% for form_address in addresses %}
+        {% with form_address.instance as address %}
+            <div class="gdn-modal"
+                 id="form-update-address-{{ address.id }}">
+                <div class="gdn-modal-content gdn-modal-content-scroll">
+                    <div class="gdn-modal-header">
+                        <span class="text-title-3">
+                            Ubah alamat
+                        </span>
+                        <button
+                            data-modal="form-update-address-{{ address.id }}"
+                            type="button"
+                            class="btn btn-link open-modal text-black gdn-modal-header-close">
+                            <i class="fa ion-android-close"></i>
+                        </button>
+                    </div>
+                    <form id="update_address_form_{{ address.id }}"
+                          action="{% url 'customer:address-update' address.id %}?next={% url 'checkout:shipping-address' %}"
+                          method="post"
+                          class="gdn-form well">
+                        {% csrf_token %}
+                        <div class="gdn-modal-body">
+                            {% include "partials/form_fields.html" with form=form_address form_uniq_id=address.id %}
+                        </div>
+                        <div class="gdn-modal-footer">
+                            <div class="form-group">
+                                <button class="btn btn-block btn-black" type="submit"
+                                        data-loading-text="Menyimpan...">Simpan
+                                </button>
+                                <a href="#" style="text-align:center;" data-modal="form-update-address-{{ address.id }}"
+                                   class="btn-link btn-block text-center open-modal">Kembali</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+</section>

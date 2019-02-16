@@ -1,0 +1,45 @@
+{% load reviews_tags %}
+{% load thumbnail %}
+{% load i18n %}
+{% load display_tags %}
+{% load utils_tags %}
+{% load staticfiles %}
+{% load purchase_info_tags %}
+
+{% purchase_info_for_product request product as session %}
+
+{% block product %}
+    <article
+        class="gdn-product {% if session.availability.is_available_to_buy %}gdn-product-ok{% else %}gdn-product-empty{% endif %}"
+    >
+        <figure>
+            {% block product_image %}
+                {% with image=product.primary_image %}
+                    {% thumbnail image.original "x310" upscale=False as thumb %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <picture class="gdn-product-thumb">
+                                {% if product.date_created|is_new %}
+                                    <span class="right bg-primary text-notice">NEW</span>
+                                {% endif %}
+                                <img src="{{ thumb.url }}"
+                                     alt="{{ product.get_title }}">
+                            </picture>
+                        </a>
+                    {% endthumbnail %}
+                {% endwith %}
+            {% endblock %}
+            <figcaption>
+                {% block product_title %}
+                    <a class="word-wrap text-body-1 text-body-2 text-black" href="{{ product.get_absolute_url }}"
+                       title="{{ product.get_title }}">
+                        {{ product.get_title|truncatewords:4 }}</a>
+                {% endblock %}
+                {% block product_price %}
+                    <div class="gdn-product-price">
+                        {% include "catalogue/partials/stock_record.html" %}
+                    </div>
+                {% endblock %}
+            </figcaption>
+        </figure>
+    </article>
+{% endblock %}

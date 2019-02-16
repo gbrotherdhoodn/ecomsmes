@@ -1,0 +1,412 @@
+---
+ - name: Make sure app users's www directory exists
+   file:
+     path: /srv/{{ app_user }}/www
+     state: directory
+     owner: "{{ app_user }}"
+     group: www-data
+     mode: 0775
+
+ - name: (Production) Check repo existance
+   shell: "git fetch --tags"
+   register: repo_fetch
+   args:
+     chdir: /srv/{{ app_user }}/www
+   become: yes
+   become_user: "{{ app_user }}"
+   when: (app_role == "production")
+   ignore_errors: yes
+
+ - name: Ensure the repo for checkout exists and cloned it for first time if it's not exists
+   git:
+     repo: "{{ repo }}"
+     dest: /srv/{{ app_user }}/www
+     clone: yes
+     update: yes
+   become: yes
+   become_user: "{{ app_user }}"
+   when: repo_fetch is failed
+   ignore_errors: yes
+
+ - name: (Production) Fetch new tags from remote
+   shell: "git fetch --tags"
+   args:
+     chdir: /srv/{{ app_user }}/www
+   become: yes
+   become_user: "{{ app_user }}"
+   when: (app_role == "production" and repo_fetch is failed)
+
+ - name: (Production) Get latest tag name from remote
+   shell: "git describe --tags `git rev-list --tags --max-count=1`"
+   args:
+     chdir: /srv/{{ app_user }}/www
+   register: latest_tag
+   become: yes
+   become_user: "{{ app_user }}"
+   when: (app_role == "production" and repo_ref is not defined)
+   ignore_errors: yes
+
+ - name: (Production) Set repo version when repo_ref/tag is not defined
+   set_fact:
+    repo_ver: "{{ latest_tag.stdout }}"
+   when: (app_role == "production" and repo_ref is not defined)
+
+ - name: (Production) Set repo version when repo_ref/tag is defined
+   set_fact:
+    repo_ver: "{{ repo_ref }}"
+   when: (app_role == "production" and repo_ref is defined)
+
+ - name: Set repo version when repo_ref is not defined
+   set_fact:
+    repo_ver: "{{ repo_version }}"
+   when: (app_role != "production" and repo_ref is not defined)
+
+ - name: Set repo version when repo_ref is defined
+   set_fact:
+    repo_ver: "{{ repo_ref }}"
+   when: (app_role != "production" and repo_ref is defined)
+
+ - name: Deploy application codes
+   git:
+    repo: "{{ repo }}"
+    dest: /srv/{{ app_user }}/www
+    force: yes
+    version: "{{ repo_ver }}"
+   become: true
+   become_user: "{{ app_user }}"
+
+ - name: Make sure static directory exists
+   file:
+     path: /srv/{{ app_user }}/www/static
+     state: directory
+     owner: "{{ app_user }}"
+     group: www-data
+     mode: 0775
+   when: (app_role != "production")
+
+ - name: Make sure Uploads directory exists
+   file:
+     path: /srv/{{ app_user }}/www/uploads
+     state: directory
+     owner: "{{ app_user }}"
+     group: www-data
+     mode: 0775
+   when: (app_role != "production")
+
+ - name: Remove deploy directory Jenkinsfile & Vagrantfile
+   file:
+     path: /srv/{{ app_user }}/www/{{ item }}
+     state: absent
+   with_items:
+    - deploy
+    - Jenkinsfile
+    - Vagrantfile
+
+#LOG file
+ - name: Make sure all application log file exists and has correct permission
+   file:
+     path: '/srv/{{ app_user }}/www/logs/{{ item }}.log'
+     owner: "{{ app_user }}"
+     group: www-data
+     state: touch
+     mode: 0644
+   with_items:
+     - app
+     - uwsgi
+
+#Solr
+ - name: Copy Solr-Core Haystack (Production)
+   shell: "rsync -avzP -og --chown=solr:solr /srv/{{ app_user }}/www/solr-core/{{ app_user }} {{ python_user }}@{{ SOLR_HOST }}:/var/solr/data/"
+   when: (app_role == "production")
+
+ - name: Copy Solr-Core Haystack
+   copy:
+    src: ../../../../solr-core/{{ app_user }}
+    dest: /var/solr/data/
+    owner: solr
+    group: solr
+   when: (app_role != "production")
+
+ - name: Deploy uwsgi ini as vassel script
+   template:
+     src: templates/uwsgi.ini
+     dest: /srv/{{ app_user }}/uwsgi.ini
+     owner: "{{ app_user }}"
+     group: www-data
+
+ - name: Make sure virtualenv is installed for python{{py_version}}
+   command: python{{py_version}} -m venv /srv/{{ app_user }}/venv
+   become: yes
+   become_user: "{{ app_user }}"
+
+ - name: Install uwsgi in Virtualenv
+   pip:
+     name: "{{item}}"
+     state: present
+     virtualenv: /srv/{{ app_user }}/venv
+   with_items:
+     - uwsgi
+
+ - name: Set Timezone Asia/Jakarta
+   shell: "timedatectl set-timezone Asia/Jakarta"
+   become: yes
+
+ - name: Symlink uwsgi
+   file:
+     src: /srv/{{ app_user }}/venv/bin/uwsgi
+     dest: /usr/local/bin/uwsgi
+     state: link
+     force: yes
+
+ - name: Change file permission for venv files
+   file:
+     path: /srv/{{ app_user }}/venv/
+     owner: "{{ app_user }}"
+     group: www-data
+     recurse: yes
+   become: true
+
+ - name: Install python application requirements
+   pip:
+    virtualenv: /srv/{{ app_user }}/venv
+    requirements: /srv/{{ app_user }}/www/requirements/prod.txt
+   become: yes
+   become_user: "{{ app_user }}"
+
+ - name: Symlink Django.po For translate
+   file:
+     src: /srv/{{ app_user }}/www/src/{{ app_user }}/locale/id/LC_MESSAGES/django.po
+     dest: /srv/{{ app_user }}/venv/lib64/python3.6/site-packages/oscar/locale/id/LC_MESSAGES/django.po
+     state: link
+     owner: "{{ app_user }}"
+     group: www-data
+     force: yes
+
+ - name: Remove static directory
+   file:
+     path: /srv/{{ app_user }}/www/src/{{ app_user }}/static
+     state: absent
+     force: yes
+
+ - name: Ensure database migrations are applied
+   django_manage:
+    command: migrate
+    app_path: /srv/{{ app_user }}/www/src/{{ app_user }}
+    virtualenv: /srv/{{ app_user }}/venv
+   become: yes
+   become_user: "{{ app_user }}"
+   become_flags: '--login'
+
+ - name: Ensure collectstatic are applied
+   django_manage:
+    command : "collectstatic --noinput"
+    app_path: /srv/{{ app_user }}/www/src/{{ app_user }}
+    virtualenv: /srv/{{ app_user }}/venv
+   become: yes
+   become_user: "{{ app_user }}"
+   become_flags: '--login'
+   notify: Reload Vassel
+
+ - name: Ensure static compress
+   django_manage:
+    command: compress --force
+    app_path: /srv/{{ app_user }}/www/src/{{ app_user }}
+    virtualenv: /srv/{{ app_user }}/venv
+   become: yes
+   become_user: "{{ app_user }}"
+   become_flags: '--login'
+
+ # - name: Ensure rebuild_index are applied
+ #   django_manage:
+ #    command : "rebuild_index --noinput"
+ #    app_path: /srv/{{ app_user }}/www
+ #    virtualenv: /srv/{{ app_user }}/venv
+ #   become: yes
+ #   become_user: "{{ app_user }}"
+ #   become_flags: '--login'
+
+ - name: Ensure Compile Messages are applied
+   django_manage:
+    command : "compilemessages --locale=id"
+    app_path: /srv/{{ app_user }}/www/src/{{ app_user }}
+    virtualenv: /srv/{{ app_user }}/venv
+   become: yes
+   become_user: "{{ app_user }}"
+   become_flags: '--login'
+
+ - name: Symlink Django.mo For translate
+   file:
+     src: /srv/{{ app_user }}/www/src/{{ app_user }}/locale/id/LC_MESSAGES/django.mo
+     dest: /srv/{{ app_user }}/venv/lib64/python3.6/site-packages/oscar/locale/id/LC_MESSAGES/django.mo
+     state: link
+     owner: "{{ app_user }}"
+     group: www-data
+     force: yes
+    # become: yes
+    # become_user: "{{ app_user }}"
+
+##############
+# Production #
+##############
+
+###########
+# Rabbit  #
+###########
+
+ - name: Create a vhost for the application
+   rabbitmq_vhost:
+     name: "{{ app_name }}"
+     state: present
+   delegate_to: "{{ SOLR_HOST }}"
+   remote_user: "{{ python_user }}"
+   when: (app_role == "production")
+
+ - name: Create application user
+   rabbitmq_user:
+     user: "{{ app_user }}"
+     password: "{{ rabbitpass }}"
+     vhost: "{{ app_name }}"
+     configure_priv: .*
+     read_priv: .*
+     write_priv: .*
+     state: present
+   delegate_to: "{{ SOLR_HOST }}"
+   remote_user: "{{ python_user }}"
+   when: (app_role == "production")
+
+
+##########
+# Celery #
+##########
+
+ - name: Copy Celery service script to /opt
+   template:
+     src: "templates/celery/{{ item }}.sh"
+     dest: "/opt/{{ item }}.sh"
+     owner: "{{ app_user }}"
+     group: "{{ app_user }}"
+     mode: 0755
+   with_items:
+     - 'celery'
+   become: true
+   when: (app_role != "production")
+
+ - name: Copy Celery services to systemd
+   template:
+     src: "templates/celery/{{ item }}.service"
+     dest: "/etc/systemd/system/{{ item }}.service"
+     mode: 0644
+   with_items:
+     - celery
+   become: true
+   when: (app_role != "production")
+
+ - name: Kill all previous running background services
+   shell: ps -auxww | grep '{{ item }}' | awk '{print $2}' | sudo xargs kill -9
+   args:
+     executable: /bin/bash
+   with_items:
+     - 'celery'
+   ignore_errors: True
+   become: true
+   when: (app_role != "production")
+
+ - name: Make sure Celery services is stop
+   systemd:
+     name: "{{ item }}"
+     state: stopped
+   with_items:
+     - 'celery'
+   when: (app_role != "production")
+
+
+ - name: Make sure Celery services is started
+   systemd:
+     name: "{{ item }}"
+     daemon_reload: yes
+     no_block: yes
+     enabled: yes
+     state: started
+   with_items:
+     - 'celery'
+   when: (app_role != "production")
+
+###########
+# Staging #
+###########
+
+##########
+# Rabbit #
+##########
+
+ - name: Create a vhost for the application
+   rabbitmq_vhost:
+     name: "{{ app_name }}"
+     state: present
+   when: (app_role != "production")
+
+ - name: Create application user
+   rabbitmq_user:
+     user: "{{ app_user }}"
+     password: "{{ rabbitpass }}"
+     vhost: "{{ app_name }}"
+     configure_priv: .*
+     read_priv: .*
+     write_priv: .*
+     state: present
+   when: (app_role != "production")
+
+##########
+# Celery #
+##########
+
+ - name: Copy Celery service script to /opt
+   template:
+     src: "templates/celery/{{ item }}.sh"
+     dest: "/opt/{{ item }}.sh"
+     owner: "{{ app_user }}"
+     group: "{{ app_user }}"
+     mode: 0755
+   with_items:
+     - 'celery'
+   become: true
+   when: (app_role != "production")
+
+ - name: Copy Celery services to systemd
+   template:
+     src: "templates/celery/{{ item }}.service"
+     dest: "/etc/systemd/system/{{ item }}.service"
+     mode: 0644
+   with_items:
+     - celery
+   become: true
+   when: (app_role != "production")
+
+ - name: Kill all previous running background services
+   shell: ps -auxww | grep '{{ item }}' | awk '{print $2}' | sudo xargs kill -9
+   args:
+     executable: /bin/bash
+   with_items:
+     - 'celery'
+   ignore_errors: True
+   become: true
+   when: (app_role != "production")
+
+ - name: Make sure Celery services is stop
+   systemd:
+     name: "{{ item }}"
+     state: stopped
+   with_items:
+     - 'celery'
+   when: (app_role != "production")
+
+ - name: Make sure Celery services is started
+   systemd:
+     name: "{{ item }}"
+     daemon_reload: yes
+     no_block: yes
+     enabled: yes
+     state: started
+   with_items:
+     - 'celery'
+   when: (app_role != "production")

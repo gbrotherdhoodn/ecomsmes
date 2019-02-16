@@ -1,0 +1,65 @@
+{% extends "customer/emails/base.html" %}
+
+{% load currency_filters i18n %}
+{% load thumbnail %}
+{% load staticfiles %}
+{% load utils_tags %}
+
+
+{% block tbody %}
+    {% with order.sources.last as payment %}
+        {% with payment.source_type as type %}
+        <tr>
+            <td class="content-wrap">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="content-block content-text">
+                            Halo, {{ order.user.first_name|add:" "|add:order.user.last_name | default:"Pelanggan JimsHoneyOfficial.com" }}
+                        </td>
+                    </tr>
+                    <tr>
+                        {% if type.source_type != "credit_card" %}
+                            <td class="content-block content-text">Harap Melakukan Pembayaran</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td class="content-block">
+                            {% if type.source_type != "credit_card" %}
+                                <p class="content-text">
+                                    Transfer dapat dilakukan ke nomor rekening Virtual Account
+                                    Bank {{ type.name }}.
+                                </p>
+                                <p class="content-text aligncenter">Jumlah Tagihan:</p>
+                                <p class="content-text aligncenter" style="font-size: 20px;font-weight: bold;font-style: normal;line-height: 1.36;letter-spacing: normal;">
+                                    Rp. {{ payment.amount_allocated|floatformat:"2" }}
+                                </p>
+                                <p class="content-text">
+                                    Terima kasih sudah memesan barang dari JimsHoneyOfficial.com
+                                    Batas waktu pembayaran Anda dengan Nomor Pesanan
+                                    <b>{{ order.number|stringformat:"s" }}</b>
+                                    adalah 24 jam. Jika melewati batas waktu maka transaksi akan dibatalkan
+                                    secara otomatis.
+                                </p>
+                            {% else %}
+                                <p class="content-text">
+                                    Pembayaran Menggunakan {{ payment.card_type.title }} Card
+                                    ({{ payment.credit_card.card_type }})
+                                    Bank {{ payment.credit_card.bank_name }}
+                                </p>
+                                <p class="content-text">dengan Jumlah:</p>
+                                <p class="content-text">Rp. {{ payment.amount_allocated|floatformat:"2" }}</p>
+                                <p class="content-text">Terima kasih sudah memesan barang dari JimsHoneyOfficial.com</p>
+                            {% endif %}
+                            <p class="content-text">
+                                Barang akan segera diproses segera setelah pembayaran dilakukan.
+                                Hari pengiriman akan menyesuaikan dengan tanggal pembayaran dilakukan.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {% endwith %}
+    {% endwith %}
+    {% include "customer/emails/partials/order_info.html" with order=order %}
+{% endblock %}

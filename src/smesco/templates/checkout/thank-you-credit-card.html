@@ -1,0 +1,61 @@
+{% load staticfiles %}
+{% load currency_filters %}
+<div class="accordion-checkout">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12 box-content with-margin-bottom">
+            <section id="thank-you-top " class="with-margin-bottom d-block">
+                <span class="text-heading-1">
+                    Pesanan Anda telah kami terima dengan detail sebagai berikut:
+                </span>
+                <div class="d-block with-margin-bottom"></div>
+                <div class="d-block with-margin-bottom"></div>
+                <div class="row">
+                    <div class="col-lg-3 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="d-block text-body-1">
+                            Nomor Pesanan
+                        </span>
+                    </div>
+                    <div class="col-lg-9 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="d-block text-heading-3">
+                           {{ order.number }}
+                        </span>
+                    </div>
+                    <div class="col-lg-3 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="d-block text-body-1">
+                            Total Belanja
+                        </span>
+                    </div>
+                    <div class="col-lg-9 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="d-block text-heading-3">
+                           {{ order.total_incl_tax|currency:order.currency }}
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <section id="alert-thank-you" class="with-margin-bottom d-block">
+            <div class="d-flex middle-lg middle-xs middle-sm">
+                <i class="fa ion-android-alert"></i>
+                <span class="text-body-1">
+                   Kami sedang memproses pesanan anda, silahkan lihat pada status pengiriman di halaman pesanan saya
+                </span>
+            </div>
+        </section>
+        <section class="thank-you-button">
+            <div class="row center-xs">
+                <div class="col-lg-8 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6 col-sm-6">
+                            <a href="{% url 'customer:order' order_number=order.number %}"
+                               class="btn btn-block btn-primary">Lihat Pesanan</a>
+                        </div>
+                        <div class="col-lg-6 col-xs-6 col-sm-6">
+                            <a href="{{ homepage_url }}"
+                               class="btn btn-block btn-secondary">Belanja Lagi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

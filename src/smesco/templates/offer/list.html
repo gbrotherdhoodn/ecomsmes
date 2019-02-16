@@ -1,0 +1,46 @@
+{% extends "layout_offer.html" %}
+
+
+{% load i18n %}
+{% load product_tags %}
+
+{% block title %}
+{% trans "Sale" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="d-flex between-xs">
+    <ul class="gdn-breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+        </li>
+        <li class="active">Sale</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block headertext %}
+{% endblock %}
+
+{% block content %}
+    {% if not offers %}
+        {% with "Maaf, Tidak ada penawaran untuk saat ini... Yuk temukan lagi produk insiprasi kamu" as wording %}
+            {% include "partials/data-not-found.html" with id="product-list-not-found" wording=wording button_name="Temukan Lagi" id="product-list-not-found" image="product-not-found.png" grid="col-lg-7" %}
+        {% endwith %}
+    {% else %}
+        {% for offer in offers %}
+        <h2>{{ offer.name }}</h2>
+        {% if offer.has_products %}
+            <ul class="row">
+                {% for product in offer.products|slice:":4" %}
+                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+                {% endfor %}
+            </ul>
+            <div class="row center-xs">
+                <a class="btn btn-black" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Lihat Produk Lebih Lanjut" %}</a>
+            </div>
+        {% endif %}
+        <hr/>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

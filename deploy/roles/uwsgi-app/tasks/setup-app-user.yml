@@ -1,0 +1,88 @@
+---
+
+- name: set net.core.somaxconn to {{ max_con }} in sysctl
+  sysctl: name={{ item.key }} value={{ item.value }}
+  with_items:
+    - { key: "net.core.somaxconn", value: "{{ max_con }}" }
+
+- name: Create User based Application for {{ app_user }}
+  user:
+    name: "{{ app_user }}"
+    shell: /bin/bash
+    groups: www-data
+    append: yes
+    createhome: yes
+    home: /srv/{{ app_user }}
+
+- name: Change permission for user home directory
+  shell: "chown -R {{ app_user }}:www-data /srv/{{ app_user }}"
+  args:
+    executable: /bin/bash
+  become: yes
+
+- name: Deploy user's bash .profile
+  template:
+    src: templates/profile.bash
+    dest: /srv/{{ app_user }}/.profile
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0700
+
+- name: Make sure app users's .ssh directory exists
+  file:
+    path: /srv/{{ app_user }}/.ssh
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0700
+
+- name: Deploy private keys
+  copy:
+    content: "{{private_key}}"
+    dest: /srv/{{ app_user }}/.ssh/id_rsa
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0600
+
+- name: Deploy configs
+  copy:
+    content: "{{configs}}"
+    dest: /srv/{{ app_user }}/.ssh/config
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0600
+
+#deploy admin key
+- name: Deploy Super Admin key
+  copy:
+    content: "{{admin_key}}"
+    dest: /srv/{{ app_user }}/.ssh/authorized_keys
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0600
+  when: app_role == "production"
+
+
+- name: Deploy Admin & Data
+  copy:
+    content: "{{dw_key}}"
+    dest: /srv/{{ app_user }}/.ssh/authorized_keys
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0600
+  when: app_role != "production"
+
+#deploy pypi
+
+# - name: Deploy pypi release
+#   copy:
+#     content: "{{pypi_release}}"
+#     dest: etc/pip.conf
+#   when: app_role == "production"
+
+
+- name: Deploy pypi pre release
+  copy:
+    content: "{{pypi_pre}}"
+    dest: /etc/pip.conf
+  when: app_role != "production"

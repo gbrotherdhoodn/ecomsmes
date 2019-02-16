@@ -1,0 +1,158 @@
+.review {
+
+    &-arrow {
+        i {
+            font-size: 34px;
+        }
+
+        &-slide {
+            cursor: pointer;
+
+            &-disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+        }
+    }
+
+    &-header {
+        padding: 10px 0;
+    }
+
+    &-content {
+        p {
+            margin: 0;
+        }
+    }
+
+    &-star {
+
+        color: @alert;
+
+
+        i {
+            letter-spacing: -1px;
+            width: auto;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+
+            &:before {
+                content: "\f006";
+            }
+        }
+
+        &-header {
+            i {
+                font-size: 24px;
+            }
+        }
+
+
+        a {
+            margin-left: 10px;
+        }
+
+        &.review-1 i:first-child {
+            &:before {
+                content: "\f005";
+            }
+        }
+
+        &.review-2 i:first-child, &.review-2 i:first-child + i {
+            &:before {
+                content: "\f005";
+            }
+        }
+
+        &.review-3 i:first-child, &.review-3 i:first-child + i, &.review-3 i:first-child + i + i {
+            &:before {
+                content: "\f005";
+            }
+        }
+
+        &.review-4 i:first-child, &.review-4 i:first-child + i, &.review-4 i:first-child + i + i, &.review-4 i:first-child + i + i + i {
+            &:before {
+                content: "\f005";
+            }
+        }
+
+        &.review-5 i {
+            &:before {
+                content: "\f005";
+            }
+        }
+    }
+
+    &-form {
+        &-star {
+            select {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .star-rating {
+                color: @alert;
+
+                i {
+                    letter-spacing: -1px;
+                    width: auto;
+                    cursor: pointer;
+                    padding: 10px;
+
+                    &:before {
+                        content: "\f006";
+                    }
+                }
+
+                a {
+                    margin-left: 10px;
+                }
+
+                &.One i:first-child {
+                    &:before {
+                        content: "\f005";
+                    }
+                }
+
+                &.Two i:first-child, &.Two i:first-child + i {
+                    &:before {
+                        content: "\f005";
+                    }
+                }
+
+                &.Three i:first-child, &.Three i:first-child + i, &.Three i:first-child + i + i {
+                    &:before {
+                        content: "\f005";
+                    }
+                }
+
+                &.Four i:first-child, &.Four i:first-child + i, &.Four i:first-child + i + i, &.Four i:first-child + i + i + i {
+                    &:before {
+                        content: "\f005";
+                    }
+                }
+
+                &.Five i {
+                    &:before {
+                        content: "\f005";
+                    }
+                }
+            }
+        }
+    }
+
+    &-date {
+        margin-left: 10px;
+    }
+}
+
+.review_add {
+    display: none;
+}
+
+.gdn-review {
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 1px solid @light-grey;
+}

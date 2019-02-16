@@ -1,0 +1,5 @@
+---
+http_hostname: dev-jimshoney.gramedia.io
+domains: gramedia.io
+is_local_dev: no
+app_role: develop

@@ -1,0 +1,58 @@
+---
+- hosts:
+    - jims-omnibus
+
+  vars_files:
+    - environments/vault_vars.yml
+
+  vars:
+    workdir: "/srv/{{ app_user }}/www/src/{{ app_user }}"
+    venv: "/srv/{{ app_name }}/venv"
+    db_pass: "{{ jims_db_pass }}"
+    access_key: "{{ oss_ak }}"
+    secret_access: "{{ oss_sk }}"
+    python_user: root
+    project_name: "{{ app_name }}"
+    #rabbitmq vars
+    rabbitpass: "{{ rabbit_pass }}"
+
+    APP_ENV_PREFIX: JIM
+
+    #celery vars
+    celery_appname: smesco
+    celery_logfile: smesco_celery.log
+    celery_workdir: /srv/{{ app_user }}/www/src/smesco
+
+#NewRelic configuration
+    newrelic_write_logfile: True #True And False
+    app_full_name: "Jims Honey" #Display Application Name Newrelic
+
+#roles active
+  roles:
+    - role: apps/submodule
+      when: app_role == "vagrant"
+    - role: common/ubuntu-bionic
+    - role: apps/python
+    - role: apps/nginx
+      use_brotli: "True"
+    - apps/npm
+    - role: apps/postgresql
+      when: app_role != "production"
+    - { role: lang/java, java_version: 8 }
+    - role: apps/solr
+      when: app_role != "production"
+    - role: 'apps/rabbitmq'
+      listeners_tcp_default: 5672
+      rabbitmq_user: "rabbit_admin"
+      rabbitmq_pass: "{{ rabbitpass }}"
+      management_listener_port: 15672
+      when: app_role != "production"
+    - role: 'uwsgi-app'
+      http_static_locations:
+        - http_path: '/static'
+          dir_path: '{{ workdir }}/static'
+        - http_path: '/uploads'
+          dir_path: '{{ workdir }}/uploads'
+    - role: apps/newrelic
+      when: app_role == "production"
+  become: yes

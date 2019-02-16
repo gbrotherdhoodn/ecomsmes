@@ -1,0 +1,104 @@
+{% load thumbnail %}
+{% load i18n %}
+{% load staticfiles %}
+{% load basket_tags %}
+{% load display_tags %}
+{% load purchase_info_tags %}
+{% load utils_tags %}
+
+{% with all_images=product.get_all_images %}
+    {# use length rather then count as the images get queried anyways #}
+
+    {% if all_images|length > 1 %}
+        <div class="gdn-slider" id="product_gallery">
+            <div class="gdn-product-detail-gallery-image swiper-container p-rel">
+                {% iffeature "wishlists" %}
+                    {% include "catalogue/partials/add_to_wishlist.html" with product=product %}
+                {% endiffeature %}
+                <div class="gdn-share-button">
+                    <span class="text-caption">SHARE :</span>
+                    <a href="" class="text-black">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="" class="text-black">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                </div>
+                {% if product.date_created|is_new %}
+                    <span class="left gdn-product-detail-flag text-notice bg-primary">NEW</span>
+                {% endif %}
+                <div class="swiper-wrapper">
+                    {% for image in all_images %}
+                        <div class="swiper-slide">
+                            <div class="gdn-product-detail-image-slide">
+                                <figure>
+                                    <picture>
+                                        {% thumbnail image.original "440x400" upscale=False as thumb %}
+                                            <img src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                        {% endthumbnail %}
+                                    </picture>
+                                </figure>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="gdn-slider-button-left">
+                    <i class="fa fa-chevron-left "></i>
+                </div>
+                <div class="gdn-slider-button-right">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+                <div class="gdn-slider-pagination"></div>
+            </div>
+            <div class="gdn-product-detail-gallery-thumb swiper-container">
+                <div class="swiper-wrapper">
+                    {% for image in all_images %}
+                        <div class="swiper-slide gdn-product-detail-thumb">
+                            <figure>
+                                <picture>
+                                    {% thumbnail image.original "200x200" crop="center" as thumb %}
+                                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                    {% endthumbnail %}
+                                </picture>
+                            </figure>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+
+        {# Only one image to show #}
+        <div id="product_gallery">
+            <div class="gdn-product-detail-image-slide p-rel d-flex reverse-columns-sm reverse-columns-xs">
+                {% iffeature "wishlists" %}
+                    {% include "catalogue/partials/add_to_wishlist.html" with product=product %}
+                {% endiffeature %}
+                <div class="gdn-share-button">
+                    <span class="text-caption">SHARE :</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+                       class="text-black">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ product.get_title }}"
+                       class="text-black">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                </div>
+                {% if product.date_created|is_new %}
+                    <span class="left gdn-product-detail-flag text-notice bg-primary">NEW</span>
+                {% endif %}
+                <figure>
+                    <picture>
+                        {% with image=product.primary_image %}
+                            {% thumbnail image.original "440x400" upscale=False as thumb %}
+                                <img src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                            {% endthumbnail %}
+                        {% endwith %}
+                    </picture>
+                </figure>
+            </div>
+        </div>
+
+    {% endif %}
+{% endwith %}

@@ -1,0 +1,5 @@
+---
+http_hostname: staging.jimshoneyofficial.com
+domains: jimshoneyofficial.com
+is_local_dev: no
+app_role: staging

@@ -1,0 +1,14 @@
+[
+    {
+        "model": "address.country",
+        "pk": "ID",
+        "fields": {
+            "iso_3166_1_a3": "IDN",
+            "iso_3166_1_numeric": "360",
+            "printable_name": "Indonesia",
+            "name": "Republic of Indonesia",
+            "display_order": 1,
+            "is_shipping_country": true
+        }
+    }
+]

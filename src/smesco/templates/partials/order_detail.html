@@ -1,0 +1,304 @@
+{% load currency_filters %}
+{% load display_tags %}
+{% load thumbnail %}
+{% load reviews_tags %}
+{% load utils_tags %}
+{% load function_tags %}
+{% load i18n %}
+{% load static %}
+
+{% if not checkout %}
+    <div class="container">
+{% endif %}
+<div class="gdn-title gdn-title-with-subtitle-bottom">
+    <h1 class="text-title-3 text-title-4">
+        {% if checkout %} Ringkasan Order  {% else %} Pesanan #{{ order.number }} - {{ order.status }} {% endif %}
+    </h1>
+    <span class="text-body-1 text-body-1 text-body-2">Tanggal Pesanan {{ order.date_placed }}</span>
+</div>
+
+<section id="order-detail">
+    {% if not checkout %}
+        {% if not checkout %}
+            {% if  order.status != 'Canceled' %}
+                <div class="gdn-step">
+                    <div class="gdn-step-list">
+                        <div class="border-step"></div>
+                        <div class="border-step-progress {{ order.status|upper }}"></div>
+                        <div class="steps-row-2 setup-panel-2 d-flex between-lg between-sm between-xs">
+                            <div
+                                class="gdn-step-circle {% if  order.status == 'Placed' %}active {% endif %}  {% if  order.status == 'Paid' %}active {% endif %}{% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">
+                                <span href="#step-1" type="button"
+                                      class="btn btn-circle-2 text-caption">
+                                    <img src="{% static "img/step/placed.png" %}" alt="">
+                                </span>
+                                <span
+                                    class="step-text text-caption {% if  order.status == 'Placed' %}active {% endif %}  {% if  order.status == 'Paid' %}active {% endif %}{% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">Placed</span>
+                            </div>
+                            <div
+                                class="gdn-step-circle {% if  order.status == 'Paid' %}active {% endif %}{% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">
+                            <span href="#step-2" type="button"
+                                  class="btn  btn-circle-2">
+                                <img src="{% static "img/step/paid.png" %}" alt="">
+                            </span>
+                                <span
+                                    class="step-text text-caption {% if  order.status == 'Paid' %}active {% endif %}{% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">paid</span>
+                            </div>
+                            <div
+                                class="gdn-step-circle {% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">
+                            <span href="#step-3" type="button"
+                                  class="btn btn-circle-2 text-caption">
+                                <img src="{% static "img/step/shipping.png" %}" alt="">
+                            </span>
+                                <span
+                                    class="step-text text-caption {% if  order.status == 'Shipped' %}active {% endif %} {% if  order.status == 'Completed' %}active {% endif %}">Shipped</span>
+                            </div>
+                            <div
+                                class="gdn-step-circle {% if  order.status == 'Completed' %}active {% endif %}">
+                        <span href="#step-4" type="button"
+                              class="btn btn-circle-2">
+                            <img src="{% static "img/step/complated.png" %}" alt="">
+                        </span>
+                                <span
+                                    class="step-text text-caption  {% if  order.status == 'Completed' %}active {% endif %}">COMPLETED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="gdn-step">
+                    <div class="gdn-step-list">
+                        <div class="border-step"></div>
+                        <div class="border-step-progress COMPLETED"></div>
+                        <div class="steps-row-2 setup-panel-2 d-flex between-lg between-sm between-xs">
+                            <div
+                                class="gdn-step-circle active">
+                                <span href="#step-1" type="button"
+                                      class="btn btn-circle-2 text-caption">
+                                    <img src="{% static "img/step/placed.png" %}" alt="">
+                                </span>
+                                <span
+                                    class="step-text text-caption active">Placed</span>
+                            </div>
+
+                            <div
+                                class="gdn-step-circle active">
+                                <span href="#step-4" type="button"
+                                      class="btn btn-circle-2">
+                                    <img src="{% static "img/step/canceled.png" %}" alt="">
+                                </span>
+                                <span
+                                    class="step-text text-caption  active">CANCELED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <div class="row with-margin-bottom">
+        <div class="col-lg-6 col-sm-12 col-xs-12 with-margin-bottom">
+            <div class="box-content">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12 with-margin-bottom">
+                        <span class="text-heading-3 text-heading-4 d-block with-margin-bottom">Alamat Kirim</span>
+                        <div class="row">
+                            {% for field in order.shipping_address.active_address_fields %}
+                                <div class="col-lg-12 col-xs-12 col-sm-12 ">
+                                    <span class="text-body-1 text-body-2 d-block">{{ field }} {{ key }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12 col-xs-12 with-margin-bottom">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12  with-margin-bottom">
+                    <div class="box-content">
+                        {% if checkout %}
+                            <h2 class="text-heading-3 text-heading-4 d-flex middle-xs with-margin-bottom">
+                                <i class="fa fa-truck" style="margin-right:7px;"></i>
+                                <span class="text-heading-3 text-heading-4">Kurir Pengiriman</span>
+
+                            </h2>
+                        {% endif %}
+                        <span class="d-block text-caption">Metode Pengiriman</span>
+                        <span class="d-block text-body-1 text-body-2">{{ order.shipping_method }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div class="box-content">
+                        {% if checkout %}
+                            <h2 class="text-heading-3 text-heading-4 d-block with-margin-bottom">
+                                <span
+                                    class="text-heading-3 text-heading-4 d-block with-margin-bottom">Metode Pembayaran</span>
+                            </h2>
+                        {% endif %}
+                        <span class="d-block text-caption">Metode Pembayaran</span>
+                        <span
+                            class="d-block text-body-1 text-body-2">{{ order.sources.last.source_type|safe|default:"-" }}</span>
+                        {% if order.sources.last.va_number and order.status == 'Placed' %}
+                            <span
+                                class="d-block text-body-1 text-body-2">{{ order.sources.last.va_number|safe|default:"-" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row with-margin-bottom">
+        <div class="col-lg-8 col-sm-12 col-xs-12">
+            {% for line in order.lines.all %}
+                {% with unit_price=line.line_price_after_discounts_incl_tax %}
+                    {% with product=line.product %}
+                        <div class="box-content height-auto with-margin-bottom">
+                            <div class="row">
+                                <div class="col-lg-2 col-sm-2 col-xs-3">
+                                    <div class="gdn-product-image-small">
+                                        <figure>
+                                            {% with image=product.primary_image %}
+                                                {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        <picture>
+                                                            <img class="thumbnail" src="{{ thumb.url }}"
+                                                                 alt="{{ product.get_title }}"/>
+                                                        </picture>
+                                                    </a>
+                                                {% endthumbnail %}
+                                            {% endwith %}
+                                        </figure>
+                                    </div>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-xs-9">
+                                    <div class="row with-margin-bottom between-lg midle-lg">
+                                        <div class="col-lg-8 col-sm-8 col-xs-12">
+                                            <a
+                                                href="{{ product.get_absolute_url }}">
+                                                <span
+                                                    class="text-heading-3 text-heading-4">{{ line.description }}</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-4 col-xs-12 text-right">
+                                            {% iffeature "reviews" %}
+                                                {% if order.status == "Completed" %}
+                                                    <a href="{% url 'catalogue:detail' product_slug=product.slug pk=product.id %}#addreview"
+                                                       class="btn btn-link">Berikan Ulasan</a>
+                                                {% endif %}
+                                            {% endiffeature %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-5 col-xs-5 with-margin-bottom">
+                                            <span class="d-block text-caption">Warna</span>
+                                            <span
+                                                class="d-block text-body-1 text-body-2">{% attribute_detail product 'Warna' %}</span>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-7 col-xs-7 text-right">
+                                            <span class="d-block text-caption">Harga</span>
+                                            <span
+                                                class="d-block text-body-1 text-body-2">{{ unit_price|currency:order.currency }}</span>
+                                        </div>
+                                        <div
+                                            class="col-lg-1 col-sm-5 col-xs-5 text-right text-mobile-left with-margin-bottom">
+                                            <span class="d-block text-caption">Qty</span>
+                                            <span class="d-block text-body-1 text-body-2">{{ line.quantity }}</span>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-7 col-xs-7 text-right">
+                                            <span class="d-block text-caption">Subtotal</span>
+                                            {% multiply line.quantity unit_price as subtotal %}
+                                            <span
+                                                class="d-block text-body-1 text-body-2">{{ subtotal|currency:order.currency }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endwith %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        {% get_voucher_list order.discounts as vouchers %}
+        <div class="col-lg-4 col-sm-12 col-xs-12">
+            <div class="box-content height-auto">
+                <div class="row with-margin-bottom">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+                        <span class="text-body-1 text-body-2">Total</span>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                        {% total_before_voucher order.basket_total_incl_tax vouchers as total_before_voucher %}
+                        <span
+                            class="text-body-1 text-body-2">{{ total_before_voucher|currency:order.currency }}</span>
+                    </div>
+                </div>
+                <div class="row with-margin-bottom">
+                    <div class="col-lg-6  col-sm-6 col-xs-6 text-left">
+                        <span class="text-body-1 text-body-2">Ongkos Kirim & Handling</span>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                        <span
+                            class="text-body-1 text-body-2">{{ order.shipping_incl_tax|currency:order.currency }}</span>
+                    </div>
+                </div>
+                <div class="row with-margin-bottom">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+                        <span class="text-body-1 text-body-2">Promo</span>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                        {% if vouchers.category != 'Shipping' %}
+                            <span
+                                class="text-body-1 text-body-2">{{ vouchers.amount|currency:order.currency|default:'-' }}</span>
+                        {% else %}
+                            <span class="text-body-1 text-body-2">-</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row with-margin-bottom">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+                        <span class="text-heading-3 text-heading-4">Total Belanja</span>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                        <span
+                            class="text-heading-3 text-heading-4">{{ order.total_incl_tax|currency:order.currency }}</span>
+                    </div>
+                </div>
+                {% if order.status == place_status and order.sources.last %}
+                    {% with order.sources.last.payment_status as last_source %}
+                        {% if last_sources != '1' and last_source != '6' %}
+                            <div class="row with-margin-bottom">
+                                <div class="col-lg-12 col-sm-12 col-xs-12">
+                                    <form method="post" name="ePayment" action="{{ payment_url }}">
+                                        <input type="hidden" name="MerchantCode" value="{{ merchant_code }}">
+                                        <input type="hidden" name="PaymentId"
+                                               value="{{ order.sources.last.source_type.code }}">
+                                        <input type="hidden" name="RefNo" value="{{ order.number }}">
+                                        <input type="hidden" name="Amount" value="{{ order.total_incl_tax }}">
+                                        <input type="hidden" name="Currency" value="IDR">
+                                        <input type="hidden" name="ProdDesc"
+                                               value="JimsHoney Order #{{ order.number }}">
+                                        <input type="hidden" name="UserName" value="{{ user.get_full_name }}">
+                                        <input type="hidden" name="UserEmail" value="{{ user.email }}">
+                                        <input type="hidden" name="UserContact" value="{{ user.phone }}">
+                                        <input type="hidden" name="Remark" value="">
+                                        <input type="hidden" name="Lang" value="UTF-8">
+                                        <input type="hidden" name="Signature" value="{{ signature_key }}">
+                                        <input type="hidden" name="ResponseURL" value="{{ response_url }}">
+                                        <input type="hidden" name="BackendURL" value="{{ backend_url }}">
+                                        <div class="form-group"></div>
+                                        <input class="btn btn-black btn-block" type="submit" value="Bayar Sekarang"
+                                               name="Submit">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% if not checkout %}
+    </div>
+{% endif %}

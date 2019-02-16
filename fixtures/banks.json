@@ -1,0 +1,68 @@
+[
+    {
+        "model": "payment.sourcetype",
+        "pk": 1,
+        "fields": {
+            "name": "BCA Virtual Account",
+            "code": "25",
+            "image": "/img/bank/bca.png",
+            "is_active": true,
+            "source_type": "virtual_account"
+        }
+    },
+    {
+        "model": "payment.sourcetype",
+        "pk": 2,
+        "fields": {
+            "name": "BNI Virtual Account",
+            "code": "26",
+            "image": "/img/bank/bni.png",
+            "is_active": true,
+            "source_type": "virtual_account"
+        }
+    },
+    {
+        "model": "payment.sourcetype",
+        "pk": 3,
+        "fields": {
+            "name": "Mandiri Virtual Account",
+            "code": "17",
+            "image": "/img/bank/mandiri.png",
+            "is_active": true,
+            "source_type": "virtual_account"
+        }
+    },
+    {
+        "model": "payment.sourcetype",
+        "pk": 4,
+        "fields": {
+            "name": "Permata Virtual Account",
+            "code": "31",
+            "image": "/img/bank/permata.png",
+            "is_active": true,
+            "source_type": "virtual_account"
+        }
+    },
+    {
+        "model": "payment.sourcetype",
+        "pk": 5,
+        "fields": {
+            "name": "Credit Card",
+            "code": "1",
+            "image": "/img/bank/visa.png",
+            "is_active": true,
+            "source_type": "credit_card"
+        }
+    },
+    {
+        "model": "payment.sourcetype",
+        "pk": 6,
+        "fields": {
+            "name": "Credit Card",
+            "code": "1",
+            "image": "/img/bank/master-card.png",
+            "is_active": true,
+            "source_type": "credit_card"
+        }
+    }
+]

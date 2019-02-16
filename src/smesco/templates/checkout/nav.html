@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="gdn-checkout-header">
+    <div class="container">
+        <div class="row between-lg middle-lg center-sm center-xs">
+            <div class="col-lg-7 col-sm-12">
+                <div class="header-logo">
+                    <a href="{{ homepage_url }}">
+                        {% block brand_title %}
+                            <span class="gdn-icon-logo gdn-icon-logo-checkout">{{ shop_name }}</span>
+                        {% endblock %}
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 col-sm-12">
+                <ul class="gdn-breadcrumb gdn-breadcrumb-checkout">
+                    <li class="{% if step == 1 %}active{% else %}disabled{% endif %}">
+                        {% if step == 2 %}
+                            <a href="{% url 'checkout:shipping-address' %}">
+                            <span>
+                                {% trans "Pengiriman" %}
+                            </span>
+                            </a>
+                        {% else %}
+                            <span>
+                            {% trans "Pengiriman" %}
+                        </span>
+                        {% endif %}
+                    </li>
+
+                    <li class="{% if step == 2 %}active{% else %}disabled{% endif %}">
+                    <span>
+                        {% trans "Pembayaran" %}
+                    </span>
+                    </li>
+
+                    <li class="step3 {% if step == 3 %}active{% else %}disabled{% endif %} ">
+                    <span>
+                        {% trans "Ringkasan" %}
+                    </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

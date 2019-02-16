@@ -1,0 +1,240 @@
+.gdn-checkout {
+    padding: 0;
+    width: 100%;
+    padding-top: 65px;
+    display: block;
+
+    &-header {
+        padding: 20px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        background-color: @white;
+    }
+
+    &-footer {
+        right: 0;
+        left: 0;
+        text-align: center;
+    }
+
+    &-box {
+        border: 1px solid @light-grey;
+        padding: 1rem;
+        min-height: 18rem;
+
+        &-pink {
+            border: 1px solid @light-grey;
+            padding: 1rem;
+            min-height: auto;
+        }
+    }
+
+    .gdn-profile-address {
+        > ul {
+            > li {
+                display: block;
+                //width: 100%;
+            }
+        }
+
+        &-shipping {
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: space-between;
+
+            > ul {
+                > li {
+                    //width: 49.5%;
+                }
+            }
+        }
+    }
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+
+    }
+
+    .title {
+        align-items: center;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 12px 0;
+    }
+
+    .content {
+        display: table;
+        width: 100%;
+        padding: 0;
+
+        .address {
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid @light-grey;
+            padding: 16px 16px;
+            width: 100%;
+
+            .top {
+                margin-bottom: 40px;
+            }
+
+            h3 {
+                > i {
+                    margin-right: 10px;
+                }
+            }
+
+            ul.address-sidebar-list {
+                margin-top: 20px;
+
+                > li {
+                    display: block;
+                    margin-bottom: 16px;
+
+                    > span {
+                        display: block;
+                        margin-bottom: 8px;
+                    }
+
+                }
+            }
+        }
+
+        .address-choose {
+            //width: 230px
+        }
+
+        .address-box {
+            //width: calc(~"100% - 250px");
+        }
+    }
+}
+
+.checkbox-name-only {
+    display: block;
+    position: relative;
+    cursor: not-allowed;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    height: 100%;
+    margin: 0;
+    border: 1px solid @grey;
+    padding: 4px 10px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        display: block;
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        height: 100%;
+        cursor: not-allowed;
+
+        ~ span {
+            width: 100%;
+            display: block;
+            padding: 4px;
+        }
+
+        //&:checked {
+        //    ~ span {
+        //        background-color: rgba(0, 160, 180, 0.24);
+        //    }
+        //}
+    }
+}
+
+#alert-thank-you {
+    background-color: #fcf6db;
+    padding: 5px 20px;
+
+    i {
+        margin-right: 10px;
+    }
+}
+
+
+.gdn-checkout-box-address {
+    padding: 10px;
+    border: 1px solid @light-grey;
+    margin-bottom: 10px;
+
+    &-default {
+        border: 1px solid @primary;
+    }
+
+    .address-bottom {
+
+    }
+
+    .address-list-data {
+        &:first-child {
+            font-weight: bold;
+        }
+    }
+}
+
+.address-list-box {
+    .address-list-data {
+        &:first-child {
+            margin-bottom: 16px;
+
+            span {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.gdn-dropdown-menu-shipping {
+    display: none;
+}
+
+.form-voucher {
+    display: none;
+}
+
+.form-voucher-group {
+    position: relative;
+
+    input {
+        padding-right: 86px;
+    }
+
+    button {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
+.btn-block-with-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i > {
+        margin-right: 10px
+    }
+}
+
+@media screen and (max-width: @m-break) {
+    .gdn-checkout {
+        &-header {
+            border-bottom: 1px solid @light-grey;
+        }
+    }
+}
+
+

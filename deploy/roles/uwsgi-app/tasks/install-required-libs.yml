@@ -1,0 +1,48 @@
+---
+- name: Deploy app user environment display command
+  copy:
+    src: files/print-app-env.pl
+    dest: /usr/local/bin/print-app-env
+    mode: 0755
+
+- name: Deploy the shell env var setter command
+  copy:
+    src: files/set-app-env.pl
+    dest: /usr/local/bin/set-app-env
+    mode: 0755
+
+- pip:
+    name: "{{item}}"
+    state: present
+    executable: pip3
+  with_items:
+#     - virtualenv
+#     - psycopg2
+    - psycopg2-binary
+
+- name: Deploy App Binary Requirements
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - libtiff5-dev
+    - libjpeg8-dev
+    - zlib1g-dev
+    - libfreetype6-dev
+    - liblcms2-dev
+    - libwebp-dev
+    - git
+    - postgresql-client-common
+    # - nodejs-legacy
+    # - python3-psycopg2
+    # - python3-virtualenv
+    # - virtualenv
+
+- name: Install memcached
+  apt:
+    name: memcached
+    state: present
+    update_cache: yes
+  notify: Restart Memcache
+  when : (app_role != "production")

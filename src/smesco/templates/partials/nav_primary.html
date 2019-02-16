@@ -1,0 +1,76 @@
+{% load currency_filters %}
+{% load category_tags %}
+{% load i18n %}
+
+<nav class="header-menu">
+    <ul class="ul-list-none">
+        {% category_tree as tree_categories %}
+        {% if tree_categories %}
+            {% for tree_category, info in tree_categories %}
+                <li>
+                    <a class="text-body-1 text-black" href="{{ tree_category.get_absolute_url }}"
+                       data-parent="{{ tree_category.get_parent }}">
+                        <span>{{ tree_category.name }}</span>
+                        <i class="fa ion-chevron-right"></i>
+                    </a>
+                    {% if info.has_children %}
+                        <ul class="d-none">
+                    {% else %}
+                        </li>
+                    {% endif %}
+                    {% for n in info.num_to_close %}
+                        </ul>
+                        </li>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+            <li class="text-body-1">
+                <a href="/offers/">Sale</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<div class="header-mobile-back">
+
+</div>
+<div class="header-logo">
+    <a href="#"
+       class="btn btn-link btn-block text-center {% if homepage_url != request.path %} active {% endif %}"
+       style="text-align: center"><i
+        class="ion-android-arrow-back fa"></i></a>
+
+    <a href="{{ homepage_url }}">
+        {% block brand_title %}
+            <span class="gdn-icon-logo">{{ shop_name }}</span>
+        {% endblock %}
+    </a>
+</div>
+<div class="header-right">
+    <div class="header-right-group">
+        {% include "partials/search.html" %}
+        <div class="header-cart">
+            <a href="" class="search-button-mobile text-black"><i class="fa ion-ios-search-strong text-black"></i></a>
+
+            {% if homepage_url != request.path %}
+                {% if user.is_authenticated %}
+                    <a href="" class="open-account-mobile un-home  text-black mobile-account"><i
+                        class="fa ion-android-person"></i></a>
+                {% else %}
+                    <a href="{% url 'customer:login' %}" class="text-black mobile-account"><i
+                        class="fa ion-android-person"></i></a>
+                {% endif %}
+            {% endif %}
+            <a
+                href="{% url 'basket:summary' %}" class="d-flex between-lg middle-lg">
+                <i class="fa ion-android-cart text-black"></i>
+                {% if not request.basket.is_empty %}
+                    <span id="total-quantity-on-cart" class="header-cart-circle">
+                    {{ request.basket.num_items }}
+                    </span>
+
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</div>

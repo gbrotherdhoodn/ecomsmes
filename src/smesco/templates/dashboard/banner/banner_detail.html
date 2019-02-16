@@ -1,0 +1,44 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block title %}
+    {% trans "Banner" %} '{{ txn.title }}' | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+   <ul class="breadcrumb">
+        <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+       <li><a href="{% url 'dashboard:banner-list' %}">{% trans "Banners" %}</a></li>
+        <li class="active">'{{ txn.title }}'</li>
+    </ul>
+{% endblock %}
+
+{% block dashboard_content %}
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr><th>{% trans "Banner" %}</th><td>{{ txn.title }}</td></tr>
+            <tr><th>{% trans "Image" %}</th>
+                <td>
+                {% if txn.image.url %}
+                    {% with image=txn.image %}
+                        {% thumbnail image "300x300" upscale=False as thumb %}
+                        <a href="{{ image.url }}" target="_blank">
+                            <img src="{{ thumb.url }}" alt="{{ txn.image.name }}" >
+                        </a>
+                        {% endthumbnail %}
+                    {% endwith %}
+                {% else %}
+                    —
+                {% endif %}
+                </td>
+            </tr>
+            <tr><th>{% trans "Description" %}</th><td>{{ txn.description }}</td></tr>
+            <tr><th>{% trans "Url" %}</th><td><a href="{{ txn.url }}">{{ txn.url }}</a></td></tr>
+            <tr><th>{% trans "Valid From" %}</th><td>{{ txn.valid_from }}</td></tr>
+            <tr><th>{% trans "Valid Until" %}</th><td>{{ txn.valid_until }}</td></tr>
+            <tr><th>{% trans "Number" %}</th><td>{{ txn.number }}</td></tr>
+        </tbody>
+    </table>
+    <a href="{% url 'dashboard:banner-list' %}" class="btn btn-primary">&laquo; {% trans "Back" %}</a>
+{% endblock dashboard_content %}

@@ -1,0 +1,141 @@
+{% load i18n %}
+{% load staticfiles %}
+<footer class="gdn-footer d-block container-fluid">
+    {% block footer %}
+        <div class="gdn-footer-top bg-accent-light d-block">
+            <div class="container">
+                <div class="row center-xs without-margin">
+                    <div class="col-lg-6 col-xs-12">
+                        <div class="d-block">
+                        <span class="text-heading-3 text-black d-block text-left text-bold">
+                            Berlangganan Newsletter
+                        </span>
+                            <span class="text-body-1 text-black d-block text-left">
+                            Jika ingin tetap update untuk produk baru kami
+                        </span>
+                        </div>
+                        <form action="{% url 'campaign:subscribe' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" placeholder="Email Anda" class="form-control"
+                                       name="email_newsletter">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-black" data-loading-text="Loading...">
+                                        Berlangganan
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gdn-footer-middle bg-primary d-block">
+            <div class="container">
+                <div class="row between-xs">
+                    <div class="col-lg-2 col-sm-6 col-xs-12">
+                        <h4 class="text-heading-1">
+                            Ikuti Kami
+                        </h4>
+                        <ul class="ul-list-none gdn-footer-middle-social">
+                            <li><a href="{{ SOCIAL_INSTAGRAM }}" target="_blank" class="text-black d-block"><i
+                                class="fa fa-instagram"></i></a></li>
+                            <li><a href="{{ SOCIAL_FACEBOOK }}" target="_blank" class="text-black d-block"><i
+                                class="fa fa-facebook"></i></a></li>
+                            <li><a href="{{ SOCIAL_TWITTER }}" target="_blank" class="text-black d-block"><i
+                                class="fa fa-twitter"></i></a></li>
+                            <li><a href="{{ SOCIAL_YOUTUBE }}" target="_blank" class="text-black d-block"><i
+                                class="fa fa-youtube-play"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-6 col-xs-12">
+                        <h4 class="text-heading-1">
+                            Pembayaran
+                        </h4>
+                        <ul class="ul-list-none gdn-footer-middle-bank">
+                            <li>
+                                <img src="{% static "img/bank/visa.png" %}" alt="">
+                            </li>
+                            <li>
+                                <img src="{% static "img/bank/master-card.png" %}" alt="">
+                            </li>
+                        </ul>
+                        <h4 class="text-heading-1">
+                            Pengiriman
+                        </h4>
+                        <ul class="ul-list-none gdn-footer-middle-bank">
+                            <li>
+
+                                <img src="{% static "img/bank/kgx.png" %}" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <h4 class="text-heading-1">
+                            Layanan Pelanggan
+                        </h4>
+                        <ul class="ul-list-none block-li">
+                            <li>
+                                <a href="/layanan-pelanggan/cara-belanja/" class="text-black text-body-1">Cara
+                                    Belanja</a>
+                            </li>
+                            <li>
+                                <a href="/cara-pembayaran/" class="text-black text-body-1">Cara
+                                    Pembayaran</a>
+                            </li>
+                            <li>
+                                <a href="/kebijakan-pengiriman/" class="text-black text-body-1">Kebijakan
+                                    Pengiriman</a>
+                            </li>
+                            <li>
+                                <a href="/kebijakan-pengembalian/" class="text-black text-body-1">Kebijakan
+                                    Pengembalian</a>
+                            </li>
+                            <li>
+                                <a href="/metode-pembayaran/virtual-account" class="text-black text-body-1">
+                                    Metode pembayaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/cakupan-pengiriman/kg-express-regular/" class="text-black text-body-1">Cakupan
+                                    Pengiriman</a>
+                            </li>
+                            <li>
+                                <a href="/faqs/pemesanan" class="text-black text-body-1">FAQs</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <h4 class="text-heading-1">
+                            Tentang Kami
+                        </h4>
+                        <ul class="ul-list-none block-li">
+                            <li>
+                                <a href="/tentang-kami/" class="text-black text-body-1">Tentang Jims
+                                    Honey</a>
+                            </li>
+                            <li>
+                                <a href="/contact-us/" class="text-black text-body-1">Kontak Kami</a>
+                            </li>
+                            <li>
+                                <a href="/kebijakan-privasi/" class="text-black text-body-1">Kebijakan
+                                    Privasi</a>
+                            </li>
+                            <li>
+                                <a href="/syarat-dan-ketentuan/" class="text-black text-body-1">Syarat
+                                    dan Ketentuan</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gdn-footer-bottom bg-primary d-block">
+            <div class="d-block text-center">
+                <span class="text-body-1 text-black">© 2018 - PT. Gramedia Digital Nusantara</span>
+            </div>
+        </div>
+    {% endblock %}
+</footer>

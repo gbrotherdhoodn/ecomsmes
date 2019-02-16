@@ -1,0 +1,197 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+{% load currency_filters %}
+{% load utils_tags %}
+{% load staticfiles %}
+
+{% block breadcrumbs %}
+
+{% endblock %}
+
+{% block tabcontent %}
+
+    {#    <div class="container">#}
+    {#        {% if orders or form.is_bound %}#}
+    {#            <div class="well">#}
+    {#                <h2>{% trans "Filter" %}</h2>#}
+    {#                <form action="." method="get" class="form-horizontal">#}
+    {#                    {% include "partials/form_fields.html" with form=form style='horizontal' %}#}
+    {#                    <div class="form-group">#}
+    {#                        <div class="col-sm-offset-4 col-sm-8">#}
+    {#                            <button type="submit" class="btn btn-primary"#}
+    {#                                    data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>#}
+    {#                            <a href="{% url 'customer:order-list' %}" class="btn btn-default">{% trans 'Reset' %}</a>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        {% endif %}#}
+    {#    </div>#}
+
+    <div class="container">
+        <div class="gdn-title">
+            <h1 class="text-title-3 text-title-4">
+                Pesanan Saya
+            </h1>
+        </div>
+        <div class=" order-list">
+            {% if orders %}
+                {% for order in orders %}
+                    <div class="order-list-row with-margin-bottom">
+                        <div class="row middle-lg start-sm start-xs">
+                            <div class="col-lg-3 col-sm-8 col-xs-8">
+                                <span class="text-body-1 text-body-2">Pesanan Saya</span>
+                                <a href="{% url 'customer:order' order_number=order.number %}" class="btn-link">
+                                    #{{ order.number }}
+                                </a>
+                                <span class="text-caption">Dipesan pada tanggal {{ order.date_placed }}</span>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-xs-4 flag">
+                                <span class="order-list-flag {% if order.status == "Completed" %} bg-success
+                                {% elif order.status == "Canceled" %} bg-error {% else %} bg-alert {% endif %} text-white">
+                                    {{ order.status|upper }}
+                                </span>
+                            </div>
+                            <div class="col-lg-2 col-sm-8 col-xs-8 margin">
+                                <span
+                                    class="text-body-1 text-body-2 ellipsis-desktop d-block">{{ order.shipping_address.salutation }}</span>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-xs-12">
+                                <span
+                                    class="text-body-1 text-body-2 d-block text-right">{{ order.total_incl_tax|currency:order.currency }}</span>
+                            </div>
+                            <div class="col-lg-3 col-xs-12 col-xs-12">
+                                {% if order.status == 'Placed' or order.status == 'Shipped' %}
+                                    {% order_flow order.status 'Canceled' as is_could_change_status_cancel %}
+                                    {% order_flow order.status 'Complated' as is_could_change_status_complete %}
+                                    {% order_flow order.status 'Shipped' as is_could_change_status_shipped %}
+                                    {% if is_could_change_status_cancel %}
+                                        <div class="form-group">
+                                            <a href="#" data-modal="order-list-modal-{{ order.number }}"
+                                               class="btn btn-black btn-block btn-sm open-modal">Batalkan Pesanan</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="/metode-pembayaran/virtual-account/"
+                                               class="btn btn-secondary btn-sm  btn-block">Petunjuk Pembayaran</a>
+                                        </div>
+                                    {% endif %}
+                                    {% if is_could_change_status_complete %}
+                                        <div class="form-group">
+                                            <a href="#" data-modal="order-list-modal-{{ order.number }}"
+                                               class="btn btn-black btn-sm btn-block open-modal">Konfirmasi Pesanan</a>
+                                        </div>
+                                    {% endif %}
+                                    {% if order.status == "Shipped" %}
+                                        <div class="form-group">
+                                            <a href="#" data-modal="order-list-modal-{{ order.number }}"
+                                               class="btn btn-black btn-sm btn-block open-modal">Konfirmasi Pesanan</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="#"
+                                               class="btn btn-sm btn-secondary btn-block open-modal"
+                                               data-modal="order-track-modal-{{ order.number }}">Lacak Pesanan</a>
+                                        </div>
+                                    {% endif %}
+                                    <div class="gdn-modal" id="order-track-modal-{{ order.number }}">
+                                        <div class="gdn-modal-content">
+                                            <div class="gdn-modal-header">
+                                                <span class="text-title-3 text-title-4">Lacak Pesanan</span>
+                                                <button
+                                                    data-modal="order-track-modal-{{ order.number }}"
+                                                    type="button"
+                                                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                                                    <i class="fa ion-android-close"></i>
+                                                </button>
+                                            </div>
+                                            <div class="gdn-modal-body">
+                                                <span class="text-body-1 text-body-2 with-margin-bottom d-block">
+                                                    Anda bisa melakukan pelacakan kiriman
+                                                </span>
+                                                <span class="text-body-1 text-body-2 with-margin-bottom d-block">
+                                                    dengan informasi sebagai berikut:
+                                                </span>
+                                                <span
+                                                    class="text-body-1 text-body-2 with-margin-bottom d-block">
+                                                    Logistik - {{ order.shipping_method }}
+                                                </span>
+                                                {% with order.shipping_events.last as shipping %}
+                                                    <span class="text-body-1 text-body-2 with-margin-bottom d-block">
+                                                        Nomor Resi - {{ shipping.notes }}
+                                                    </span>
+                                                {% endwith %}
+                                            </div>
+                                            <div class="gdn-modal-footer">
+                                                <div class="form-group text-right">
+                                                    <a target="_blank" href="https://kgx.co.id/" class="btn btn-link">Lacak
+                                                        di
+                                                        KGX</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="gdn-modal" id="order-list-modal-{{ order.number }}">
+                                        <div class="gdn-modal-content">
+                                            <div class="gdn-modal-header">
+                                            <span class="text-title-3 text-title-4">
+                                                {% if order.status == 'Placed' %}
+                                                    Apakah anda yakin membatalkan pesanan?
+                                                {% elif order.status == 'Shipped' %}
+                                                    Apakah pesanan anda telah tiba?
+                                                {% endif %}
+                                            </span>
+                                                <button
+                                                    data-modal="order-list-modal-{{ order.number }}"
+                                                    type="button"
+                                                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                                                    <i class="fa ion-android-close"></i>
+                                                </button>
+                                            </div>
+                                            <form action="{% url 'change-order-status' %}" method="post"
+                                                  id="order_status_form"
+                                                  class="gdn-modal-form" data-behaviours="lock">
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{ order.number }}" name="order"/>
+                                                <div class="gdn-modal-body">
+                                                    {% if order.status == 'Placed' %}
+                                                        <input class="form-control" placeholder="Alasan pembatalan"
+                                                               name="reason">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="gdn-modal-footer right">
+                                                    {% if order.status == 'Placed' %}
+                                                        <input type="hidden" value="Canceled" name="new_status"/>
+                                                        <button type="submit" class="btn btn-black"
+                                                                data-loading-text="Batal ...">Ya, Batalkan
+                                                        </button>
+                                                    {% elif order.status == 'Shipped' %}
+                                                        <input type="hidden" value="Completed" name="new_status"/>
+                                                        <button type="submit" class="btn btn-black"
+                                                                data-loading-text="Konfirmasi ...">Konfirmasi
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include "partials/pagination.html" %}
+            {% else %}
+                {% if form.is_bound %}
+                    {% with "Kamu pesanan yang anda cari tidak di temukan, silahkan ganti pencarian atau atur ulang pencarian anda" as wording %}
+                        {% include "partials/data-not-found.html" with id="product-list-not-found" wording=wording button_name="Atur Ulang Pencarian" href="customer:order" id="product-list-not-found" image="order-list-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+                    {% endwith %}
+                {% else %}
+                    {% with "Kamu belum memiliki pesanan. Silahkan melakukan transaksi untuk produk terbaik kami" as wording %}
+                        {% include "partials/data-not-found.html" with id="product-list-not-found" wording=wording button_name="Lanjut Belanja" id="product-list-not-found" image="order-list-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+                    {% endwith %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock tabcontent %}

@@ -1,0 +1,42 @@
+.gdn-wish-list {
+    z-index: 2;
+    position: absolute;
+    top: 10px;
+
+    &.left {
+        left: 2px;
+    }
+
+    &.right {
+        right: 2px;
+    }
+
+    &-button {
+        color: @black;
+        font-size: 20px;
+        width: 50px;
+        height: 50px;
+        background-color: #fafafa;
+        display: block;
+        position: relative;
+        cursor: pointer;
+        border: 0;
+        outline: 0;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px 0 @primary;
+
+        &.heart {
+            background: url("https://cssanimation.rocks/images/posts/steps/heart.png") no-repeat;
+            background-position: -25px -24px;
+            transition: background-position 1s steps(28);
+            transition-duration: 0s;
+        }
+
+        &.is-active {
+            transition-duration: 1s;
+            background-position: -2825px -23px;
+        }
+    }
+
+}
+

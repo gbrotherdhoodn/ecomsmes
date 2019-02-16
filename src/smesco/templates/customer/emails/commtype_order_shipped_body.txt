@@ -1,0 +1,27 @@
+{% load currency_filters i18n %}{% load utils_tags %}{% load function_tags %}Halo, {{ order.user.first_name|add:" "|add:order.user.last_name | default:"Pelanggan jismhoneyofficial.com" }}
+
+Pesanan kamu dengan nomor {{ order.number }} sudah kami kirimkan dan dalam perjalanan dengan informasi sebagai berikut:
+Metode Pengiriman: {{ order.shipping_method }}
+{% if order.shipping_code != 'personal-courier' %}{% with order.shipping_events.get as shipping %}Nomor Resi: {{ shipping.notes.order_number }}{% endwith %}{% endif %}
+
+Detail Pesanan
+
+{% for line in order.lines.all %} * {{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {% with unit_price=line.line_price_after_discounts_incl_tax %}{{ unit_price|currency:order.currency }}{% endwith %}
+{% endfor %}
+Total: {% total_before_voucher order.basket_total_incl_tax vouchers as total_before_voucher %}{{ total_before_voucher|currency:order.currency }}
+Ongkir: {{ order.shipping_incl_tax|currency:order.currency }}
+{% get_voucher_list order.discounts as vouchers %}{% if vouchers and vouchers.category != 'Shipping' %} Hemat: -{{ vouchers.amount|currency:order.currency }} {% endif %}
+Total Belanja: {{ order.total_incl_tax|currency:order.currency }}
+
+
+Alamat Pengiriman
+
+    {{ order.shipping_address.name }}
+    {{ order.shipping_address.line1 }},
+    {{ order.shipping_address.village.name }},
+    {{ order.shipping_address.subdistrict.name }},
+    {{ order.shipping_address.regency_district.name }},
+    {{ order.shipping_address.province.name }} -
+    {{ order.shipping_address.postcode }}
+
+

@@ -1,0 +1,34 @@
+{% extends 'dashboard/layout.html' %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Endorsement' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+        <li>{% trans "Contents" %}</li>
+        <li class="active">'{{ endorsement.endorsement }}'</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% trans "Delete Endorsement" %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <p>{% trans "Are you sure you want to delete this Endorsement?" %}</p>
+        <div class="form-group">
+            <p><strong>{{ endorsement.endorsement }}</strong></p>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-lg btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <a href="{% url 'dashboard:endorsement-list' %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock dashboard_content %}

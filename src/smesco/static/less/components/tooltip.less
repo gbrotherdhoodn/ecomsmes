@@ -1,0 +1,40 @@
+.gdn-tooltip {
+    position: absolute;
+    z-index: 1070;
+    visibility: visible;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.4;
+    display: none;
+}
+
+.gdn-tooltip.center-position {
+    left: 50%;
+    min-width: 150px;
+    transform: translateX(-50%);
+}
+
+.gdn-tooltip.bottom {
+    bottom: -50px;
+}
+
+.gdn-tooltip.bottom .arrow {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #000 transparent;
+}
+
+.gdn-tooltip-inner {
+    max-width: 200px;
+    padding: 3px 8px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    background-color: #000;
+    border-radius: 4px;
+}

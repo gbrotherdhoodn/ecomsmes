@@ -1,0 +1,306 @@
+.gdn {
+    &-product {
+        &-image-small {
+            figure {
+
+
+                picture {
+                    border: 1px solid @light-grey;
+                    position: relative;
+                    overflow: hidden;
+                    height: 80px;
+                    width: 80px;
+
+                    img {
+                        max-height: 100%;
+                        max-width: 100%;
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        margin: auto;
+                        object-fit: contain;
+                        padding: 0;
+                    }
+                }
+            }
+        }
+
+        &-list-grid {
+            margin-bottom: 15px;
+        }
+
+        display: block;
+        height: 99%;
+        width: 100%;
+        border-radius: 0;
+        background-color: #fff;
+        box-shadow: none;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            box-shadow: 0 2px 4px 0 @grey;
+            transition: all 0.5s ease-in;
+        }
+
+        > figure {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            > a {
+                position: relative;
+                display: block;
+
+                > picture {
+                    height: 250px;
+                    position: relative;
+                    overflow: hidden;
+
+                    > span {
+                        font-family: @font-primary;
+                        font-size: 16px;
+                        font-weight: normal;
+                        font-style: normal;
+                        font-stretch: normal;
+                        line-height: 1.5;
+                        letter-spacing: 0.3px;
+                        z-index: 2;
+                        text-align: center;
+                        position: absolute;
+                        top: 5px;
+                        padding: 0px 8px;
+                        .border-radius(none);
+
+                        &.right {
+                            right: 5px;
+                        }
+
+                        &.left {
+                            left: 5px
+                        }
+                    }
+
+                    > img {
+                        max-height: 100%;
+                        max-width: 100%;
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        margin: auto;
+                        object-fit: contain;
+                        padding: 0;
+                    }
+                }
+            }
+
+            > figcaption {
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: column;
+                height: 100%;
+
+                > a {
+                    min-height: 67px;
+                }
+            }
+        }
+
+
+        &-price {
+            display: block;
+            margin-top: 10px;
+        }
+
+        &-disc {
+            display: block;
+            height: 25px;
+        }
+
+        &-disc {
+            > span {
+                &:first-child {
+                    color: @grey;
+                    font-family: @font-primary;
+                    font-size: 16px;
+                    font-weight: 300;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.5;
+                    letter-spacing: 0.3px;
+                    text-decoration: line-through;
+                    margin-right: 5px;
+                }
+
+                &:last-child {
+                    font-family: @font-primary;
+                    font-size: 16px;
+                    font-weight: normal;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.5;
+                    letter-spacing: 0.3px;
+                    color: @notice;
+                }
+            }
+        }
+
+        &-empty {
+            > figure {
+                > a {
+                    position: relative;
+
+                    > picture {
+                        > img {
+                            object-fit: contain;
+                        }
+                    }
+
+                    &:before,
+                    &:after {
+                        left: 0;
+                        right: 0;
+                        position: absolute;
+                        content: "";
+                    }
+
+                    &:before {
+                        top: 0;
+                        bottom: 0;
+                        background-color: #fddfe1;
+                        z-index: 2;
+                        opacity: 0.5;
+                    }
+
+                    &:after {
+                        content: "Stock Habis";
+                        top: 50%;
+                        font-family: @font-family-base;
+                        transform: translateY(-50%);
+                        z-index: 3;
+                        text-align: center;
+                        font-weight: bold;
+                        font-size: 20px;
+                        letter-spacing: 0.2px;
+                        color: @white;
+                    }
+                }
+            }
+        }
+
+
+        &-variant {
+            margin-bottom: 40px;
+            display: block;
+
+
+            &-label {
+
+            }
+
+            &-option {
+
+            }
+        }
+
+        &-detail {
+            &-image {
+                &-slide {
+                    > figure {
+                        > picture {
+                            height: 456px;
+                            position: relative;
+
+                            > img {
+
+                                max-height: 100%;
+                                max-width: 100%;
+                                width: auto;
+                                height: auto;
+                                position: absolute;
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                margin: auto;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &-thumb {
+                > figure {
+                    border: 3px solid transparent;
+                    opacity: 0.7;
+                    transition: all 0.3s ease-in-out;
+                }
+
+                &.active {
+                    > figure {
+                        opacity: 1;
+                        transition: all 0.3s ease-in-out;
+                        border: 3px solid @black;
+                    }
+                }
+
+            }
+        }
+    }
+
+}
+
+
+@media screen and (max-width: @m-break) {
+    .gdn {
+        &-product {
+            &-image-small {
+                figure {
+                    picture {
+                        height: 60px;
+                        width: 60px;
+
+                    }
+                }
+            }
+
+            &-detail {
+                &-thumb {
+                    display: none;
+
+                }
+            }
+        }
+
+    }
+
+    #sidebar-mobile {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .gdn {
+        &-product {
+
+            &-detail {
+                &-image {
+                    &-slide {
+                        > figure {
+                            > picture {
+                                height: 300px;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+
+}

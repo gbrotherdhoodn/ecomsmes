@@ -1,0 +1,16 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ page_title }} | {% trans 'Pesanan' %} | {{ block.super }}
+{% endblock %}
+
+{% block extra_breadcrumbs %}
+    <li>
+        <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
+    </li>
+{% endblock %}
+
+{% block tabcontent %}
+    {% include 'partials/order_detail.html' with order=order %}
+{% endblock tabcontent %}

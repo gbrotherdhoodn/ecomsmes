@@ -1,0 +1,17 @@
+{% extends "error.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Page not found' %} | {{ block.super }}
+{% endblock %}
+
+{% block error_heading %}
+    {#    Maaf Halaman Ini Tidak Di Temukan#}
+{% endblock %}
+
+{% block error_message %}
+    {% with "Kami minta maaf tetapi halaman yang Anda cari tidak dapat ditemukan." as wording %}
+        {% include "partials/data-not-found.html" with id="product-cart" wording=wording button_name="Halaman Utama" id="product-list-not-found" imageclass="col-lg-8 col-sm-8 col-xs-8" image="under-maintaince.png" grid="col-lg-8 col-sm-8 col-xs-12" %}
+    {% endwith %}
+{% endblock %}
+

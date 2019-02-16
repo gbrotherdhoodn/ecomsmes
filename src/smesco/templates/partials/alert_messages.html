@@ -1,0 +1,47 @@
+{% load string_filters %}
+
+{% comment %}
+Use message tags to control these alerts.  Available tags include:
+- safe: allow HTML in the message
+- block: for longer messages - this adds extra padding
+- noicon: don't show an icon
+- error/success/info - these change the connotation of the alert
+{% endcomment %}
+
+<div id="messages" class="messages-alert">
+    {% if messages %}
+        {% for message in messages %}
+            <div
+                class="alert {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade in">
+                {% if cart %}
+                    <div class="gdn-cart-alert-box">
+                    <a class="close" onClick="window.location.reload()"><i class="fa ion-android-close"></i></a>
+                {% else %}
+                    <a class="close" data-dismiss="alert" href="#"><i class="fa ion-android-close"></i></a>
+                {% endif %}
+                <div class="alertinner {% if 'noicon' not in message.tags %}wicon{% endif %}">
+                    {% if 'safe' in message.tags %}
+                        {{ message|safe }}
+                    {% else %}
+                        {{ message }}
+                    {% endif %}
+                    {% if 'noicon' not in message.tags %}
+                        {% if 'success' in message.tags %}
+                            <i class="icon-ok-sign"></i>
+                        {% elif 'info' in message.tags %}
+                            <i class="icon-info-sign"></i>
+                        {% elif 'warning' in message.tags %}
+                            <i class="icon-warning-sign"></i>
+                        {% elif 'danger' in message.tags or 'error' in message.tags %}
+                            <i class="icon-exclamation-sign"></i>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if cart %}
+                    </div>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

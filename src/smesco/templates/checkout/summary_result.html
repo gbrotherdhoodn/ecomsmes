@@ -1,0 +1,132 @@
+{% load i18n %}
+{% load currency_filters %}
+{% load thumbnail %}
+{% load purchase_info_tags %}
+{% load staticfiles %}
+
+{% if voucherForm %}
+    {% if voucher_discounts %}
+        {% for discount in voucher_discounts %}
+            <div class="basket-summary-box-row align-items-center"
+                 style="background-color:#fdf1dc;padding: 4px 10px;border-radius: 4px;">
+                <span class="text-body-1">{{ discount.voucher.code }}</span>
+                {% if editable %}
+                    <a data-action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}"
+                       class="btn btn-white-blue remove-voucher">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <span class="display-none-mobile">&nbsp;Hapus</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% elif shipping_discounts %}
+        {% for discount in shipping_discounts %}
+            <div class="basket-summary-box-row align-items-center"
+                 style="background-color:#fdf1dc;padding: 4px 10px;border-radius: 4px;">
+                <span class="text-body-1">{{ discount.voucher.code }}</span>
+                {% if editable %}
+                    <a data-action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}"
+                       class="btn btn-white-blue remove-voucher">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <span class="display-none-mobile">&nbsp;Hapus</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="basket-summary-box-row">
+            <a href="#" class="btn btn-link display-block form-button show-hide"
+               data-id="form-voucher" data-remove="form-button">
+                Punya Voucher ?
+            </a>
+            <div class="form-voucher">
+                <div class="form-group">
+                    <label for="voucher-input" class="d-flex between-lg between-xs">
+                        <span class="text-caption">Masukan Voucher</span>
+                        <a href="" data-id="form-voucher" data-remove="form-button" class="
+                                                       text-caption text-error show-hide">Batal</a>
+                    </label>
+                    <div class="form-voucher-group">
+                        <input type="text" id="voucher-input" name="voucher"
+                               class="form-control">
+                        <button type="button" disabled class="btn btn-black" id="click-append">
+                            Gunakan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+
+<div class="row with-margin-bottom">
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+        <span class="text-body-1">
+            Total
+        </span>
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+        <span class="text-body-1">
+            {% if not show_tax_separately and basket.is_tax_known %}
+                <span
+                    class="text-body-1">{{ basket.total_incl_tax_without_voucher|currency:basket.currency }}</span>
+            {% else %}
+                <span
+                    class="text-body-1">{{ basket.total_excl_tax_without_voucher|currency:basket.currency }}</span>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+<div class="row with-margin-bottom">
+    {% if voucher_discounts %}
+        {% for discount in voucher_discounts %}
+            <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+                <span class="text-body-1=">Hemat</span>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                <span class="text-body-1 text-right">-{{ discount.discount|currency:basket.currency }}</span>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+            <span class="text-body-1">Hemat</span>
+        </div>
+        <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+            <span class="text-body-1">-</span>
+        </div>
+    {% endif %}
+</div>
+
+<div class="row with-margin-bottom">
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+        <span class="text-body-1">Ongkos Kirim</span>
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+        {% if not show_tax_separately and basket.is_tax_known %}
+            <span
+                class="text-body-1">{{ shipping_charge.price.incl_tax|currency:basket.currency }}</span>
+        {% else %}
+            <span
+                class="text-body-1">{{ shipping_charge.price.excl_tax|currency:basket.currency }}</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row with-margin-bottom">
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-left">
+        <span class="text-body-1">Total Belanja</span>
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+        {% if not show_tax_separately and basket.is_tax_known %}
+            <span
+                class="text-body-1">{{ basket.total_incl_tax|add:shipping_charge.price.incl_tax|currency:basket.currency }}</span>
+        {% else %}
+
+            <span
+                class="text-body-1">{{ basket.total_excl_tax|add:shipping_charge.price.excl_tax|currency:basket.currency }}</span>
+
+        {% endif %}
+    </div>
+</div>
+

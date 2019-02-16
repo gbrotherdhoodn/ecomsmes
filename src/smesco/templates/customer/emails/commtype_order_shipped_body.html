@@ -1,0 +1,36 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+{% load staticfiles %}
+{% load function_tags %}
+
+{% block tbody %}
+    <tr>
+        <td class="content-wrap">
+            <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="content-block content-text">
+                        Halo, {{ order.user.first_name|add:" "|add:order.user.last_name | default:"Pelanggan tokokasur.com" }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content-block">
+                        <p class="content-text">
+                            Pesanan kamu dengan nomor <b>{{ order.number }}</b> sudah kami kirimkan dan dalam perjalanan dengan informasi sebagai berikut:
+                        </p>
+                        <p class="content-text aligncenter">
+                            <b>Metode Pengiriman: {{ order.shipping_method }}</b>
+                        </p>
+                        {% if order.shipping_code != 'personal-courier' %}
+                            {% with order.shipping_events.last as shipping %}
+                            <p class="content-text aligncenter">
+                                <b>Nomor Resi: {{ shipping.notes }}</b>
+                            </p>
+                            {% endwith %}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% include "customer/emails/partials/order_info.html" with order=order %}
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% load i18n %}
+{% load function_tags %}
+
+{% block title %}
+    {{ flatpage.title }} | {{ block.super }}
+{% endblock %}
+
+
+{% block content_wrapper %}
+    <div class="gdn-page">
+        <div class="gdn-content-static">
+            <div class="container">
+                {% block breadcrumbs %}
+                    <ul class="gdn-breadcrumb">
+                        <li><a href="{{ homepage_url }}">Beranda</a></li>
+                        {% with flatpage.url|split_url  as activeUrl %}
+                            {% if  activeUrl == "layanan-pelanggan" %}
+                                <li><a href="#">Layanan Pelanggan</a></li>
+                            {% endif %}
+                            {% if  activeUrl == "cakupan-pengiriman" %}
+                                <li><a href="#">Cakupan Pengiriman</a></li>
+                            {% endif %}
+                        {% endwith %}
+                        <li class="active">{{ flatpage.title }}</li>
+                    </ul>
+                {% endblock %}
+                {% block content %}
+                    <div class="row">
+                        {% with flatpage.url|split_url  as activeUrl %}
+                            <div class="col-lg-4 col-sm-12 col-xs-12">
+                                <button type="button" data-dropdown="button-transfer"
+                                        class="d-flex between-lg btn-block btn-nav-static">
+                                    <span class="text-body-2">
+                                        {{ flatpage.title }}
+                                    </span>
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                {% if  activeUrl == "cakupan-pengiriman" %}
+                                    <ul class="ul-list-none navbar-static-page" id="button-transfer">
+                                        <li class="{% if flatpage.url|active_url == "kg-express-regular" %} active {% endif %}">
+                                            <a href="/cakupan-pengiriman/kg-express-regular/">KG Express Regular</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "kg-express-ekonomi" %} active {% endif %}">
+                                            <a href="/cakupan-pengiriman/kg-express-ekonomi/">KG Express Ekonomi</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                                {% if  activeUrl == "layanan-pelanggan" %}
+                                    <ul class="ul-list-none navbar-static-page" id="button-transfer">
+                                        <li class="{% if flatpage.url|active_url == "cara-belanja" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-berlanja/">Cara
+                                                Belanja</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-menggunakan-voucher-promo" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-menggunakan-voucher-promo/">Menggunakan
+                                                Voucher</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-hapus-produk-dari-keranjang" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-hapus-produk-dari-keranjang/">Hapus
+                                                dari Keranjang</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-cek-pesanan" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-cek-pesanan/">Cek Status
+                                                Pesanan</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "konfirmasi-terima-produk" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/konfirmasi-terima-produk/">Konfirmasi
+                                                Terima Produk</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-pilih-metode-pembayaran" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-pilih-metode-pembayaran/">Pilih
+                                                Metode Pembayaran</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "produk-favorit" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/produk-favorit/">Produk Favorit</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-memberikan-ulasan" %} active {% endif %}">
+                                            <a href="/layanan-pelanggan/cara-memberikan-ulasan/">Memberi
+                                                Ulasan Produk</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                                {% if  activeUrl == "faqs" %}
+                                    <ul class="ul-list-none navbar-static-page" id="button-transfer">
+                                        <li class="{% if flatpage.url|active_url == "pemesanan" %} active {% endif %}">
+                                            <a href="/faqs/pemesanan/">Pemesanan</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "pembayaran" %} active {% endif %}">
+                                            <a href="/faqs/pembayaran/">Pembayaran</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "pengiriman" %} active {% endif %}">
+                                            <a href="/faqs/pengiriman/">Pengiriman</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "pengembalian" %} active {% endif %}">
+                                            <a href="/faqs/pengembalian/">Pengembalian</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                                {% if  activeUrl == "metode-pembayaran" %}
+
+                                    <ul class="ul-list-none navbar-static-page" id="button-transfer">
+                                        <li class=" {% if flatpage.url|active_url == "virtual-account" %} active {% endif %}">
+                                            <a
+                                                href="/metode-pembayaran/virtual-account/">Transfer Virtual
+                                                Account</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cicilan-tanpa-kartu-kredit" %} active {% endif %}">
+                                            <a
+                                                href="/metode-pembayaran/cicilan-tanpa-kartu-kredit/">Cicilan Tanpa
+                                                Kartu
+                                                Kredit</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cicilan-installment" %} active {% endif %}">
+                                            <a href="/metode-pembayaran/cicilan-installment/">Cicilan / Installment</a>
+                                        </li>
+                                        <li class="{% if flatpage.url|active_url == "cara-hapus-produk-dari-keranjang" %} active {% endif %}">
+                                            <a href="/metode-pembayaran/kartu-kredit-debit-online/">Kartu Kredit / Debit
+                                                Online</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            {% if  activeUrl == "metode-pembayaran" or activeUrl == "faqs" or activeUrl == "layanan-pelanggan" or activeUrl == "cakupan-pengiriman" %}
+                                <div class="col-lg-8 col-sm-12 col-xs-12">
+                                    <h1 class="text-title-1 text-center">{{ flatpage.title }}</h1>
+                                    <article class="content-static">{{ flatpage.content }}</article>
+                                </div>
+                            {% else %}
+                                <div class="col-lg-12 col-sm-12 col-xs-12">
+                                    <h1 class="text-title-1 text-center">{{ flatpage.title }}</h1>
+                                    <article class="content-static">{{ flatpage.content }}</article>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

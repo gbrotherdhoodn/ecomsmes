@@ -1,0 +1,202 @@
+{% load i18n %}
+{% load thumbnail %}
+{% load currency_filters %}
+{% load purchase_info_tags %}
+{% load widget_tweaks %}
+{% load utils_tags %}
+
+{% if basket_warnings %}
+    <h5>{% trans "Important messages about items in your basket" %}</h5>
+    {% for warning in basket_warnings %}
+        <div class="alert alert-warning">{{ warning }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if not basket.is_empty %}
+    <div id="content_inner">
+        <div class="container">
+            {% block basket_form_headers %}
+                <div class="gdn-title">
+                    <h1 class="text-title-3 text-title-4">Keranjang Belanja</h1>
+                </div>
+            {% endblock %}
+            <div class="row with-margin-bottom">
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    {% block basket_form_main %}
+                        <form action="." method="post" class="basket_summary" id="basket_formset">
+                            {% csrf_token %}
+                            {{ formset.management_form }}
+                            {% for form in formset %}
+                                {% with line=form.instance product=form.instance.product %}
+                                    {% purchase_info_for_line request line as session %}
+                                    <div class="basket-items box-content height-auto with-margin-bottom">
+                                        <div class="row">
+                                            <div class="col-lg-2 col-sm-2 col-xs-3">
+                                                <div class="gdn-product-image-small">
+                                                    <figure>
+                                                        {{ form.id }}
+                                                        {% with image=product.primary_image %}
+                                                            {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                                                <a href="{{ product.get_absolute_url }}">
+                                                                    <picture>
+                                                                        <img class="thumbnail" src="{{ thumb.url }}"
+                                                                             alt="{{ product.get_title }}"/>
+                                                                    </picture>
+                                                                </a>
+                                                            {% endthumbnail %}
+                                                        {% endwith %}
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-10 col-sm-10 col-xs-9">
+                                                <div class="row with-margin-bottom between-lg midle-lg">
+                                                    <div class="col-lg-8 col-sm-8 col-xs-12">
+                                                        <a
+                                                            href="{{ product.get_absolute_url }}">
+                                                            <span class="text-heading-3">{{ line.description }}</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-lg-4 col-sm-4 col-xs-12 text-right">
+                                                        <div class="remove-dekstop">
+                                                            <a class="btn btn-secondary btn-icon"
+                                                               data-behaviours="remove"
+                                                               data-id="{{ forloop.counter0 }}"
+                                                               class="inline"><i
+                                                                class="text-body-1 ion-ios-trash"></i>&nbsp;Hapus</a>
+                                                        </div>
+                                                        <div style="display:none">
+                                                            {{ form.save_for_later }}
+                                                            {{ form.DELETE }}
+                                                        </div>
+                                                        {% for field_errors in form.errors.values %}
+                                                            {% for error in field_errors %}
+                                                                <span class="error-block"><i
+                                                                    class="icon-exclamation-sign"></i> {{ error }}</span>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-sm-5 col-xs-5 with-margin-bottom">
+                                                        <span class="d-block text-caption">Warna</span>
+                                                        <span
+                                                            class="d-block text-body-1">{% attribute_detail product 'Warna' %}</span>
+                                                    </div>
+                                                    <div
+                                                        class="col-lg-3 col-sm-7 col-xs-7 text-right with-margin-bottom">
+                                                        <span class="d-block text-caption">Harga</span>
+                                                        <span class="d-block text-body-1">
+                                                        {% if not line.unit_price_incl_tax_incl_discount and not line.unit_price_excl_tax_incl_discount %}
+                                                            &mdash;
+                                                        {% else %}
+                                                            {% if line.is_tax_known %}
+                                                                {{ line.unit_price_incl_tax_incl_discount|currency:line.price_currency }}
+                                                            {% else %}
+                                                                {{ line.unit_price_excl_tax_incl_discount|currency:line.price_currency }}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </span>
+                                                    </div>
+                                                    <div
+                                                        class="col-lg-3 col-sm-5 col-xs-12 text-right text-mobile-left with-margin-bottom p-rel qty-form-parent">
+                                                        <div
+                                                            class="basket-input-quantity"
+                                                            id="quantity-form">
+                                                            <button type="button"
+                                                                    data-id="minus"
+                                                                    class="btn btn-secondary min qty-button"
+                                                            >
+                                                                -
+                                                            </button>
+                                                            <div>
+                                                                {% render_field form.quantity min="1" max=session.availability.num_available class+="form-control input-quantity" %}
+                                                            </div>
+                                                            <button type="button"
+                                                                    class="btn btn-secondary plus qty-button"
+                                                                    data-id="plus"
+                                                            >
+                                                                +
+                                                            </button>
+                                                        </div>
+                                                        <div
+                                                            class="gdn-tooltip bottom center-position"
+                                                            role="tooltip">
+                                                            <div
+                                                                class="arrow"></div>
+                                                            <div
+                                                                class="gdn-tooltip-inner">
+                                                                Stock Tersedia Hanya
+                                                                {{ session.availability.num_available }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="col-lg-3 col-sm-7 col-xs-12 text-left text-mobile-right">
+                                                        <span class="d-block text-caption">Subtotal</span>
+                                                        <span class="d-block text-body-1">
+                                                            {% if not line.line_price_incl_tax and not line_price_excl_tax %}
+                                                                &mdash;
+                                                            {% else %}
+                                                                {% if line.is_tax_known %}
+                                                                    {{ line.line_price_incl_tax_incl_discounts_without_voucher|currency:line.price_currency }}
+                                                                {% else %}
+                                                                    {{ line.line_price_excl_tax_incl_discounts_without_voucher|currency:line.price_currency }}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                                                        <div class="remove-mobile">
+                                                            <a class="btn btn-secondary btn-icon"
+                                                               data-behaviours="remove"
+                                                               data-id="{{ forloop.counter0 }}"
+                                                               class="inline"><i
+                                                                class="text-body-1 ion-ios-trash"></i>&nbsp;Hapus</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                            {% endfor %}
+                        </form>
+                    {% endblock %}
+                </div>
+                <div class="col-lg-3 col-sm-12 col-xs-12">
+                    <div class="box-content height-auto">
+                        {% block baskettotals %}
+                            {% include 'basket/partials/basket_totals.html' with editable=1 %}
+                        {% endblock baskettotals %}
+                    </div>
+                </div>
+            </div>
+            {% if upsell_messages %}
+                <div class="well">
+                    <h3 class="text-body-1 text-body-2">{% trans "You could be missing out on offers!" %}</h3>
+                    {% for upsell in upsell_messages %}
+                        {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
+                            <div class="warning text-notice text-label">{{ message }} to qualify for
+                                the {{ offer_name }} special
+                                offer
+                            </div>
+                        {% endblocktrans %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="container">
+        {% block emptybasket %}
+            {% with "Keranjang Belanja Anda Kosong. Mulai Mencari Barang yang kamu inginkan dan jadilah diri sendiri" as wording %}
+                {% include "partials/data-not-found.html" with id="product-cart" wording=wording button_name="Cari Produk" id="product-list-not-found" imageclass="col-lg-5 col-sm-5 col-xs-5" image="shopping-cart-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+            {% endwith %}
+        {% endblock %}
+    </div>
+{% endif %}
+
+
+
+{% block savedbasket %}
+{% endblock %}

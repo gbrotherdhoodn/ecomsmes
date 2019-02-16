@@ -1,0 +1,44 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+<div class="gdn-slider">
+    <div class="swiper-container slider-home-banner">
+        <div class="swiper-wrapper">
+            {% for banner in data %}
+                <div class="swiper-slide">
+                    <article class="gdn-home-banner">
+                        <figure>
+                            <picture>
+                                <a href="{{ banner.url }}">
+                                    {% thumbnail banner.image_desktop "1438x576" upscale=False as thumb %}
+                                        <img class="gdn-home-banner-desktop" src="{{ thumb.url }}"
+                                             alt="{{ banner.description }}" style="width:100%;">
+                                    {% endthumbnail %}
+                                    {% thumbnail banner.image_mobile "360x594" upscale=False as thumb %}
+                                        <img class="gdn-home-banner-mobile" src="{{ thumb.url }}"
+                                             alt="{{ banner.description }}" style="width:100%;">
+                                    {% endthumbnail %}
+                                </a>
+                            </picture>
+                        </figure>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Add Arrows -->
+
+        <div class="container"
+             style="position: absolute;top: 50%;display: table;background: red;left: 0;right: 0;">
+            <div class="pos-rel">
+                <div class="gdn-slider-button-left home-banner">
+                    <i class="fa fa-chevron-left"></i>
+                </div>
+                <div class="gdn-slider-button-right home-banner">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        <div class="gdn-slider-pagination"></div>
+    </div>
+</div>

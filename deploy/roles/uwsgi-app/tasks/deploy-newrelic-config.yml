@@ -1,0 +1,8 @@
+---
+- name: (Production) Copy newrelic.ini
+  template:
+    src: templates/newrelic.ini
+    dest: /srv/{{ app_user }}/newrelic.ini
+    owner: "{{ app_user }}"
+    group: www-data
+  when : (app_role == "production")

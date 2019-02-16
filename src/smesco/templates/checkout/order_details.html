@@ -1,0 +1,19 @@
+{% extends 'checkout/checkout.html' %}
+{% load i18n %}
+
+
+{% block title %}
+    {% trans "Detil Order" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=3 %}
+{% endblock %}
+
+{% block sub_header %}
+{% endblock %}
+{% block shipping_address %}{% endblock %}
+
+{% block order_contents %}
+    {% include 'partials/order_detail.html' with checkout=True order=order %}
+{% endblock %}

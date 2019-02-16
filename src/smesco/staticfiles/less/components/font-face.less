@@ -1,0 +1,57 @@
+/* less/components/_font-face.less */
+@font-path-one: "./components/fonts/merriweather/";
+@font-path-two: "./components/fonts/rubik/";
+@fa-versions: "123456789M";
+
+@merriweather-bold: "Merriweather", @font-path-one, bold, "Bold";
+@rubik-light: "Rubik", @font-path-two, 300, "Light";
+@rubik-regular: "Rubik", @font-path-two, 400, "Regular";
+@rubik-medium: "Rubik", @font-path-two, 500, "Medium";
+@rubik-bold: "Rubik", @font-path-two, bold, "Bold";
+
+@font-data: merriweather-bold, rubik-light, rubik-regular, rubik-medium, rubik-bold;
+
+.font-scheme(@font-data);
+.font-scheme(@dataColor) {
+    @fontdata: length(@dataColor);
+    .loop(@index) when (@index > 0) {
+        @name: extract(@dataColor, @index);
+        @font-face {
+            .font-face-loop(@dataColor, @@name);
+        }
+        .loop(@index - 1);
+    }
+    .loop(0) {
+    }
+    .loop(@fontdata);
+}
+
+.font-face-loop(@style, @dataFont) {
+    @harmony: length(@style);
+    .loop(@index) when (@index > 0) {
+        @name: extract(@dataFont, @index);
+        @fontName: extract(@dataFont, 1);
+        @fontPath: extract(@dataFont, 2);
+        @fontWeight: extract(@dataFont, 3);
+        @fontPathName: extract(@dataFont, 4);
+        @path-eot: url("@{fontPath}@{fontName}-@{fontPathName}.eot?v=@{fa-versions}");
+        @path-off2: url("@{fontPath}@{fontName}-@{fontPathName}.woff2?v=@{fa-versions}") format("woff2");
+        @path-off: url("@{fontPath}@{fontName}-@{fontPathName}.woff?v=@{fa-versions}") format("woff");
+        @path-tff: url("@{fontPath}@{fontName}-@{fontPathName}.ttf?v=@{fa-versions}") format("truetype");
+        @path-svg: url("@{fontPath}@{fontName}-@{fontPathName}.svg#@{fontPathName}?v=@{fa-versions}") format("svg");
+        @path-embedded: url("@{fontPath}@{fontName}-@{fontPathName}.eot?#iefix") format("embedded-opentype");
+        font-family: @fontName;
+        src: @path-eot;
+        src: @path-off2, @path-off, @path-tff, @path-svg, @path-embedded;
+        font-weight: @fontWeight;
+        font-display: optional;
+        .loop(@index - 1);
+    }
+    .loop(0) {
+    }
+    .loop(@harmony);
+}
+
+.word-wrap {
+    word-wrap: break-word;
+}

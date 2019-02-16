@@ -1,0 +1,80 @@
+.thank-you-image {
+    figure {
+        margin-bottom: 25px;
+
+        > picture {
+            width: 250px;
+            margin-bottom: 25px;
+        }
+
+    }
+
+}
+
+.thank-you-body {
+    margin-bottom: 40px;
+
+    .number-order, .desc, .total-price, .number-va {
+        margin-bottom: 25px;
+    }
+}
+
+.thank-you-bottom {
+    ul {
+        > li {
+            display: block;
+
+            a {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 16px;
+                border: 1px solid @light-grey;
+                align-items: center;
+
+
+                > span {
+                    margin-block-start: 0;
+                    margin-block-end: 0;
+                }
+
+                > i {
+                    font-size: 18px;
+                    transition: all 0.3s ease-in-out;
+                }
+
+                &.active {
+                    > i {
+                        transition: all 0.3s ease-in-out;
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+
+            .gdn-choose-payment {
+                display: none;
+            }
+
+            ul {
+                padding: 12px 0;
+                display: flex;
+
+                > li {
+                    > figure {
+                        > picture {
+                            padding: 15px;
+                        }
+
+                        span {
+                            line-height: 1.6;
+                            letter-spacing: 0.3px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.thank-you-button {
+    padding: 35px 0;
+}

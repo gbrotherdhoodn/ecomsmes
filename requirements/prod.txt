@@ -1,0 +1,32 @@
+Django==2.0.0
+psycopg2-binary==2.7.5
+django-oscar==1.6.2
+django-extensions
+Pillow==5.2.0
+mailchimp==2.0.9
+django-filter==2.0.0
+django-meta==1.4.1
+django-select2==6.3.1
+python-memcached==1.59
+
+# semi-optional requirements (oscar)
+django_compressor==2.2
+django-widget-tweaks==1.4.2
+pycountry==18.5.26
+django-celerybeat-status==0.0.10
+
+gdn-python-common==0.5.0
+newrelic==2.96.0.80
+
+# development
+whoosh==2.7.4
+django-debug-toolbar==1.9.1
+
+celery
+
+pysolr
+
+#logging helper
+graypy==0.3.1
+python-json-logger==0.1.9
+requests

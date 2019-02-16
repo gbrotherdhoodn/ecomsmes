@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% load i18n %}
+{% load promotion_tags %}
+{% load category_tags %}
+
+{% block layout %}
+    {% block loading_first %}
+        {% include "partials/first-loading.html" %}
+    {% endblock loading_first %}
+    <div class="gdn-page gdn-page-checkout">
+
+        {% include 'partials/alert_messages.html' %}
+
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div id="promotions">
+            {% for promotion in promotions_page %}
+                {% render_promotion promotion %}
+            {% endfor %}
+        </div>
+    </div>
+    {% include "partials/footer_checkout.html" %}
+{% endblock %}

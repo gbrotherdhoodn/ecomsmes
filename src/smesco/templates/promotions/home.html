@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load campaign_tags %}
+
+{% block navigation %}
+    {% include "partials/nav_primary.html" with expand_dropdown=1 %}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block column_left %}
+{% endblock %}
+
+{% block content %}
+    {% get_banner_images as banner_images %}
+    {% get_banner_mini as banner_mini %}
+    {% get_endorsements as endorsements %}
+    {% get_highlight_products as products %}
+
+    <div class="gdn-page gdn-page-home">
+        <div class="d-block">
+            {% include "partials/home-banner.html" with data=banner_images %}
+        </div>
+        <div class="container">
+            {% include "partials/home-banner-mini.html" with data=banner_mini %}
+
+        </div>
+
+        {% include "partials/home-banner-product.html" with data=products %}
+
+
+        <div class="d-block">
+            {% include "partials/home-testimonial.html" with data=endorsements %}
+        </div>
+
+        {#        <div class="container">#}
+        {#            {% include "partials/home-about.html" %}#}
+        {#        </div>#}
+
+
+        {% include "partials/home-navbar.html" %}
+    </div>
+{% endblock content %}
+
+

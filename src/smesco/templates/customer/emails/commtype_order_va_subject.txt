@@ -1,0 +1,1 @@
+{% load i18n %}Terima kasih Anda telah melakukan pembayaran di Tokokasur.com

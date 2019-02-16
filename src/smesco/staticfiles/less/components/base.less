@@ -1,0 +1,275 @@
+body {
+    font-size: @base-font-size;
+    font-family: @font-family-base;
+    color: @black;
+    background-color: @background-base;
+    margin: 0;
+    padding: 0;
+    display: @block;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: @black;
+    transition: all 0.7s ease-in-out;
+
+    &:hover {
+        transition: all 0.7s ease-in-out;
+    }
+}
+
+section, figure, figcaption, picture, img {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+// global class
+.ul-list-none {
+    margin: 0;
+    padding: 0;
+    display: block;
+    width: 100%;
+
+    > li {
+        display: inline-block;
+    }
+
+    &.block-li {
+        > li {
+            display: @block;
+        }
+    }
+}
+
+.fa {
+    font-size: 21px;
+}
+
+
+.container {
+    width: @container-desktop;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+
+    &-form {
+        width: 340px;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+}
+
+.gdn-title {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 72px 0 24px 0;
+    align-items: center;
+
+    &-with-subtitle {
+        &-bottom {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+    }
+}
+
+.gdn-subtitle {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0px 0 24px 0;
+    align-items: center;
+
+
+}
+
+.gdn-page {
+    display: block;
+    width: 100%;
+    padding: 220px 0 73px 0;
+
+    &-home {
+        padding-top: 192px;
+    }
+
+    &.gdn-profile {
+        .gdn-title {
+            margin-top: 32px;
+        }
+    }
+
+    &-checkout {
+        padding: 40px 0 70px 0;
+        min-height: 100vh;
+    }
+}
+
+.box-content {
+    display: block;
+    padding: 24px 16px;
+    border: 1px solid @light-grey;
+    height: 100%;
+}
+
+.box-content-without-mobile {
+    display: block;
+    padding: 24px 16px;
+    border: 1px solid @light-grey;
+    height: 100%;
+}
+
+.height-auto {
+    height: auto;
+}
+
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.with-margin-bottom {
+    margin-bottom: 15px;
+}
+
+.without-margin {
+    margin: 0;
+
+    &-left {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.p-rel {
+    position: relative;
+}
+
+
+.ellipsis-desktop {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.overflow-no-scroll {
+    position: absolute;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    max-width: 100%;
+    width: 100%;
+}
+
+
+@media screen and (max-width: @l-break) {
+    .container {
+        width: @container-mobile;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+@media screen and (max-width: @m-break) {
+    .without-padding-mobile {
+        padding: 0;
+    }
+
+    .box-content-without-mobile {
+        padding: 0;
+        border: none;
+
+        &-top {
+            padding-top: 50px;
+            border-top: 1px solid @light-grey;
+            margin-top: 20px;
+        }
+    }
+
+    .ellipsis-mobile {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    .gdn-title {
+        margin: 30px 0 24px 0;
+    }
+
+    .gdn-page {
+        display: block;
+        width: 100%;
+        padding: 65px 0 30px 0;
+
+        &-home {
+            padding-top: 48px;
+        }
+
+        &-checkout {
+            padding: 150px 0 70px 0;
+        }
+
+        &-contact-us {
+            padding: 85px 0 30px 0
+        }
+    }
+
+    .container {
+        width: 550px;
+    }
+
+    .container {
+        //&-mobile-full {
+        //    width: 550px;
+        //    padding: 0;
+        //}
+    }
+}
+
+@media screen and (max-width: 550px) {
+
+
+    .container {
+        width: 100%;
+
+        &-form {
+            width: 100%;
+        }
+    }
+
+    .container {
+        &-mobile-full {
+            width: 100%;
+            padding: 0;
+        }
+
+        &-mobile {
+            &-slider {
+                width: 100%;
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+
+// global class

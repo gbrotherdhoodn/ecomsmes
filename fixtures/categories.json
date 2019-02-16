@@ -1,0 +1,171 @@
+[
+    {
+      "model": "catalogue.category",
+      "pk": 1,
+      "fields": {
+        "path": "0001",
+        "depth": 1,
+        "numchild": 5,
+        "name": "Tas",
+        "description": "",
+        "image": "",
+        "slug": "tas"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 2,
+      "fields": {
+        "path": "00010001",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Sling Bag",
+        "description": "",
+        "image": "",
+        "slug": "sling-bag"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 3,
+      "fields": {
+        "path": "00010002",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Tote Bag",
+        "description": "",
+        "image": "",
+        "slug": "tote-bag"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 4,
+      "fields": {
+        "path": "00010003",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Clutch",
+        "description": "",
+        "image": "",
+        "slug": "clutch"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 5,
+      "fields": {
+        "path": "00010004",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Shoulder Bag",
+        "description": "",
+        "image": "",
+        "slug": "shoulder-bag"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 6,
+      "fields": {
+        "path": "00010005",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Ransel",
+        "description": "",
+        "image": "",
+        "slug": "ransel"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 7,
+      "fields": {
+        "path": "0002",
+        "depth": 1,
+        "numchild": 8,
+        "name": "Dompet",
+        "description": "",
+        "image": "",
+        "slug": "dompet"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 8,
+      "fields": {
+        "path": "00020001",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Pria",
+        "description": "",
+        "image": "",
+        "slug": "pria"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 9,
+      "fields": {
+        "path": "00020002",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Wanita",
+        "description": "",
+        "image": "",
+        "slug": "wanita"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 10,
+      "fields": {
+        "path": "0003",
+        "depth": 1,
+        "numchild": 2,
+        "name": "Jam Tangan",
+        "description": "",
+        "image": "",
+        "slug": "jam-tangan"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 11,
+      "fields": {
+        "path": "00030001",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Pria",
+        "description": "",
+        "image": "",
+        "slug": "pria"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 12,
+      "fields": {
+        "path": "00030002",
+        "depth": 2,
+        "numchild": 0,
+        "name": "Wanita",
+        "description": "",
+        "image": "",
+        "slug": "wanita"
+      }
+    },
+    {
+      "model": "catalogue.category",
+      "pk": 13,
+      "fields": {
+        "path": "0004",
+        "depth": 1,
+        "numchild": 2,
+        "name": "Sale",
+        "description": "",
+        "image": "",
+        "slug": "sale"
+      }
+    }
+]

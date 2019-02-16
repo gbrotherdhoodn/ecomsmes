@@ -1,0 +1,53 @@
+{% load reviews_tags %}
+{% load i18n %}
+
+
+<article class="review-loop">
+    <div class="row middle-lg">
+        <div class="col-lg-4 col-xs-12 col-sm-12">
+            <div class="review-left">
+                <div class="review-star {{ review.score|as_stars }}">
+                    <i class="fa fa-star "></i>
+                    <i class="fa fa-star "></i>
+                    <i class="fa fa-star "></i>
+                    <i class="fa fa-star "></i>
+                    <i class="fa fa-star "></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-xs-12 col-sm-12">
+            <div class="row start-sm end-lg start-xs without-margin-left">
+                <div class="review-name">
+                    {% if review.user == user %}
+                        <span
+                            class="d-block text-body-1 text-grey text-right ellipsis-desktop">
+                            Ulasan Anda &nbsp;
+                        </span>
+                    {% else %}
+                        {% blocktrans with name=review.reviewer_name %}
+                            <span
+                                class="d-block text-body-1 text-grey text-right ellipsis-desktop">
+                            {{ name }} &nbsp;
+                        </span>
+                        {% endblocktrans %}
+                    {% endif %}
+                </div>
+                <div class="review-date">
+                    {% blocktrans with name=review.reviewer_name review_date=review.date_created %}
+                        <span
+                            class="d-block text-body-1 text-grey text-right">
+                            {{ review_date }}
+                        </span>
+                    {% endblocktrans %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row with-margin-bottom">
+        <div class="col-lg-12 col-xs-12 col-sm-12">
+            <div class="review-content">
+                <p class="d-block text-black text-body-1">{{ review.body|striptags }}</p>
+            </div>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,219 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+{% load currency_filters %}
+{% load shipping_tags %}
+
+{% block title %}
+    {% trans "Shipping address" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=1 %}
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+
+{% block sub_header %}
+    <div class="gdn-title">
+        <h1 class="text-title-3 text-title-4">
+            Pengiriman
+        </h1>
+    </div>
+{% endblock %}
+
+{% block shipping_address %}
+    <div class="col-lg-8 col-sm-12 col-xs-12 with-margin-bottom">
+        <div class="gdn-checkout-box">
+            {% if addresses and default_address %}
+                <div class="gdn-subtitle">
+                    <h1 class="text-heading-3"><i style="margin-right:7px;" class="fa fa-map-marker"></i> Alamat Kirim
+                    </h1>
+                    <a href="" class="open-modal btn btn-link" data-modal="modal-address-list">Ubah Alamat</a>
+                </div>
+                <div class="address-list-box">
+                    <div class="row">
+                        {% for field in default_address.active_address_fields %}
+                            <div class="col-lg-12 col-xs-12 col-sm-12 address-list-data">
+                                <span class="text-body-1 d-block">{{ field }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="gdn-subtitle">
+                    <h1 class="text-title-1"><i class="fa fa-map-marker"></i>Alamat Kirim</h1>
+                </div>
+                {% with "Kamu belum memiliki alamat kirim, silahkan tambah alamat pengiriman kamu" as wording %}
+                    {% include "partials/data-not-found.html" with id="product-list-not-found" wording=wording js_class='add-address' js="form-create-address" button_name="Tambah Alamat" href="customer:address-create" id="product-list-not-found" image="address-list-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+                {% endwith %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-12 col-xs-12 with-margin-bottom">
+        {% block shipping_method %}
+            <div class="gdn-checkout-box">
+                <form method="post" action="{% url 'checkout:shipping-address' %}"
+                      class="display-flex-100 gtm-basket-id" data-cart="{{ basket.id }}">
+                    <div class="address address-choose">
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12 col-sm-12 with-margin-bottom">
+                                <h2 class="text-heading-3 d-flex middle-xs">
+                                    <i class="fa fa-truck" style="margin-right:7px;"></i>
+                                    <span class="text-heading-3">
+                                        Kurir Pengiriman
+                                    </span>
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for method in methods %}{% shipping_charge method basket as charge %}
+                                <div class="col-lg-12 col-sm-12 col-xs-12 with-margin-bottom">
+                                <span
+                                    class="text-caption text-grey d-flex">Metode Pengiriman</span>
+                                    <div class="gdn-position-rel">
+
+                                        <label for="{{ method.code }}" class="checkbox-name-only">
+                                            {% if charge.price.is_tax_known %}
+                                                <input value="{{ method.code }}" type="radio"
+                                                       name="method_code"
+                                                       checked
+                                                       data-label="{{ method.name }}"
+                                                       data-price="{{ charge.price.incl_tax|currency:basket.currency }}"
+                                                       data-estimation="{{ charge.estimate }}"
+                                                       data-error="{{ charge.error }}"
+                                                       class="drop-down-close method-code">
+                                            {% else %}
+                                                <input value="{{ method.code }}" type="radio"
+                                                       name="method_code"
+                                                       checked
+                                                       data-label="{{ method.name }}"
+                                                       data-price="{{ charge.price.excl_tax|currency:basket.currency }}"
+                                                       data-estimation="{{ charge.estimate }}"
+                                                       data-error="{{ charge.error }}"
+                                                       class="drop-down-close">
+
+                                            {% endif %}
+                                            <span class="text-body-1 ">{{ method.name }}</span>
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-sm-12 col-xs-12 with-margin-bottom">
+                                    <span class="text-caption text-grey d-block">Biaya Pengiriman</span>
+                                    {% if charge.price.is_tax_known %}
+                                        <span
+                                            class="text-body-1 d-block">{{ charge.price.incl_tax|currency:basket.currency }}</span>
+                                    {% else %}
+                                        <span
+                                            class="text-body-1 d-block">{{ charge.price.excl_tax|currency:basket.currency }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            <div class="col-lg-12 col-sm-12 col-xs-12">
+                                <input type="hidden" name="button_action" value="ship_to"/>
+                                {% csrf_token %}
+                                <div id="next-button">
+                                    <button class="btn btn-black btn-block gtm-checkout-step"
+                                            data-step="Shipping Method"
+                                            type="submit"
+                                            data-loading-text="{% trans 'Submitting...' %}">
+                                        Lanjut
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endblock %}
+    </div>
+
+    <div class="gdn-modal"
+         id="form-create-address">
+        <div class="gdn-modal-content gdn-modal-content-scroll">
+            <div class="gdn-modal-header">
+        <span class="text-title-3">
+            Tambah Alamat Anda
+        </span>
+                <button
+                    data-modal="form-create-address"
+                    type="button"
+                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                    <i class="fa ion-android-close"></i>
+                </button>
+            </div>
+            <form id="profile_form" action="{{ request.get_full_path }}" method="post"
+                  class="gdn-form well">
+                {% csrf_token %}
+                <div class="gdn-modal-body">
+                    {% include "partials/form_fields.html" with form=form %}
+                </div>
+                <div class="gdn-modal-footer">
+                    <div class="form-group">
+                        <button class="btn btn-block btn-black" type="submit" name="action"
+                                value="user_address_form" data-loading-text="Saving...">Simpan
+                        </button>
+                        <a href="#" style="text-align:center;" data-modal="form-create-address"
+                           class="btn-link btn-block text-center open-modal">Kembali</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="gdn-modal"
+         id="modal-address-list">
+        <div class="gdn-modal-content gdn-modal-content-scroll">
+            <div class="gdn-modal-header">
+            <span class="text-title-3">
+            Daftar Alamat
+            </span>
+                <button
+                    data-modal="modal-address-list"
+                    type="button"
+                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                    <i class="fa ion-android-close"></i>
+                </button>
+            </div>
+            <div class="gdn-modal-body">
+                <div class="form-group">
+                    <a href="" class="open-modal btn add-address btn-secondary btn-block btn-block-with-icon"
+                       data-modal="modal-address-list" data-open="form-create-address"><i
+                        class="fa fa-plus"></i>Tambah
+                        Alamat</a>
+                </div>
+                {% include "checkout/shipping_address_list.html" with addresses=addresses %}
+            </div>
+        </div>
+    </div>
+    {% include "checkout/shipping_address_list_modal.html" with addresses=addresses %}
+
+
+{% endblock shipping_address %}
+
+
+{% block payment_method %}{% endblock %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    var primaryKey = '';
+    {% if form.instance.pk %}
+        primaryKey = {{ form.instance.pk }}
+    {% endif %}
+
+    var address_data = {
+    state:"{% url 'load-address-states' %}",
+    district:"{% url 'load-address-districts' %}",
+    subDistrict:"{% url 'load-address-subdistricts' %}",
+    village:"{% url 'load-address-villages' %}",
+    postCode:"{% url 'load-address-postcode' %}",
+    primaryKey:primaryKey,
+    }
+    oscar.addressEvent.init(address_data);
+    {% for form_address in addresses %}
+        {% with form_address.instance.pk as address_id %}
+            var address_data_{{ address_id }} = Object.create(address_data)
+            address_data_{{ address_id }}.primaryKey = {{ address_id }}
+            var adddress_{{ address_id }} = new oscar.addressEvent.init(address_data_{{ address_id }});
+        {% endwith %}
+    {% endfor %}
+{% endblock %}

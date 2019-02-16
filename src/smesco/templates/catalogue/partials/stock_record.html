@@ -1,0 +1,37 @@
+{% load currency_filters %}
+{% load i18n %}
+{% load purchase_info_tags %}
+{% load utils_tags %}
+
+{% purchase_info_for_product request product as session %}
+
+{% if session.price.exists %}
+    {% if product.offer_discounts.is_available %}
+        {% get_discount_percent product.offer_discounts.discount session.price.excl_tax as discount_percent %}
+        <div class="gdn-product-disc">
+            <span>
+                {% if session.price.is_tax_known %}
+                    {{ session.price.incl_tax | currency:session.price.currency }}
+                {% else %}
+                    {{ session.price.excl_tax | currency:session.price.currency }}
+                {% endif %}
+            </span>
+            <span>{{ discount_percent }}%</span>
+        </div>
+    {% endif %}
+    <div class="gdn-product-disc"></div>
+    <span
+        class=" {% if detail %} text-heading-1 text-heading-2 {% else %}text-heading-3 text-heading-4 {% endif %} text-black d-block"
+        data-price="
+
+
+            {% if session.price.exists %}{{ session.price.excl_tax_incl_discount }}{% else %}{{ session.price.excl_tax_incl_discount }}{% endif %}">
+        {% if session.price.is_tax_known %}
+            {{ session.price.incl_tax_incl_discount | currency:session.price.currency }}
+        {% else %}
+            {{ session.price.excl_tax_incl_discount | currency:session.price.currency }}
+        {% endif %}
+    </span>
+{% endif %}
+
+

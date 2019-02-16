@@ -1,0 +1,148 @@
+{% extends "customer/baseaccountpage.html" %}
+
+{% load i18n %}
+
+{% block tabcontent %}
+    <div class="container">
+        <div class="row center-xs center-lg center-sm">
+            <div class="col-lg-6 col-sm-10 col-xs-12">
+                <div class="gdn-title">
+                    <h1 class="text-title-3 text-title-4">Informasi Saya</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container container-mobile-full">
+        <div class="row center-xs center-lg center-sm">
+            <div class="col-lg-6 col-sm-10 col-xs-12">
+                <div class="d-block with-margin-bottom">
+                    <div class="box-buyer-profile">
+                        <div class="row without-margin">
+                            <div class="col-lg-3 col-sm-6 col-xs-6">
+                            <span class="text-body-1 text-left d-block">
+                                Nama
+                            </span>
+                            </div>
+                            <div class="col-lg-9 col-sm-6 col-xs-6">
+                            <span class="text-heading-3 text-heading-4 text-right d-block ellipsis-mobile">
+                                {{ user.get_full_name|default:'-' }}
+                            </span>
+                            </div>
+                        </div>
+                        <div class="row without-margin">
+                            <div class="col-lg-3 col-sm-6 col-xs-6">
+                            <span class="text-body-1 text-left d-block">
+                                Email
+                            </span>
+                            </div>
+                            <div class="col-lg-9 col-sm-6 col-xs-6">
+                            <span class="text-heading-3 text-heading-4 text-right d-block ellipsis-mobile">
+                                {{ user.email }}
+                            </span>
+                            </div>
+                        </div>
+                        {% block profile_fields %}
+                            {% for field in profile_fields %}
+                                <div class="row without-margin">
+                                    <div class="col-lg-6 col-sm-6 col-xs-6">
+                                    <span class="text-body-1 text-left d-block">
+                                        {{ field.name }}
+                                    </span>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6 col-xs-6">
+                                    <span class="text-heading-3 text-heading-4 text-right d-block ellipsis-mobile">
+                                        {{ field.value|default:"-" }}
+                                    </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="row center-xs center-lg center-sm">
+            <div class="col-lg-6 col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <a href="{% url 'customer:profile-update' %}" data-modal="form-edit-profile"
+                       class="btn btn-block btn-black open-modal">Ubah Profile</a>
+                </div>
+                <div class="form-group">
+                    <a href="{% url 'customer:change-password' %}" data-modal="change-password"
+                       class="btn btn-block btn-secondary open-modal">Ganti
+                        Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gdn-modal"
+         id="form-edit-profile">
+        <div class="gdn-modal-content gdn-modal-content-scroll">
+            <div class="gdn-modal-header">
+                <span class="text-title-3">
+                    Ubah Biodata
+                </span>
+                <button
+                    data-modal="form-edit-profile"
+                    type="button"
+                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                    <i class="fa ion-android-close"></i>
+                </button>
+            </div>
+
+            <form id="profile_form" action="{{ request.get_full_path }}" method="post"
+                  class="gdn-form well">
+                {% csrf_token %}
+                <div class="gdn-modal-body">
+                    {% include "partials/form_fields.html" with form=form.profile_form %}
+                </div>
+                <div class="gdn-modal-footer">
+                    <div class="form-group">
+                        <button class="btn btn-block btn-black" type="submit" data-loading-text="Saving..."
+                                name='action' value='profile_form'>Simpan
+                        </button>
+                        <a href="#" style="text-align:center;" data-modal="form-edit-profile"
+                           class="btn-link btn-block text-center open-modal">Kembali</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="gdn-modal"
+         id="change-password">
+        <div class="gdn-modal-content gdn-modal-content-scroll">
+            <div class="gdn-modal-header">
+                <span class="text-title-3">
+                    Ganti Kata Sandi
+                </span>
+                <button
+                    data-modal="change-password"
+                    type="button"
+                    class="btn btn-link open-modal text-black gdn-modal-header-close">
+                    <i class="fa ion-android-close"></i>
+                </button>
+            </div>
+            <form id="change_password_form" class="form-stacked" action="{{ request.get_full_path }}" method="post"
+                  class="gdn-form well">
+                {% csrf_token %}
+                <div class="gdn-modal-body">
+                    {% include "partials/form_fields.html" with form=form.change_password_form %}
+                </div>
+                <div class="gdn-modal-footer">
+                    <div class="form-group">
+                        <button class="btn btn-block btn-black" type="submit" name='action' value='change_password_form'
+                                data-loading-text="Saving...">Simpan
+                        </button>
+                        <a href="#" style="text-align:center;" data-modal="change-password"
+                           class="btn-link btn-block text-center open-modal">Kembali</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

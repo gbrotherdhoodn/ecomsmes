@@ -1,0 +1,43 @@
+{% load staticfiles %}
+
+<section id="bank-step">
+    <h2 class="text-title-3 d-block with-margin-bottom">{{ bank_name }}</h2>
+    <div class="row ">
+        <div class="col-lg-12 col-xs-12 col-sm-12">
+            <div class="box-content">
+                <article class="thank-you-bottom">
+                    <div class="col-lg-12 col-xs-12 col-sm-12">
+                        <ul class="ul-list-none text-left">
+                            {% for step in payment_steps %}
+                                <li class="display-block gdn-accordian with-margin-bottom">
+                                    <a href="" class="gdn-accordian-btn" data-content="gdn-choose-payment">
+                                        <span class="text-body-1 text-dark-grey">{{ step.title }}</span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <div class="gdn-accordian-content gdn-choose-payment">
+                                    <ul class="ul-list-none row">
+                                        {% for steping in step.steps %}
+                                            <li class="col-lg-3 col-sm-6 col-xs-6">
+                                                <figure>
+                                                    <picture>
+                                                        <img
+                                                            src="{% static steping.image %}"
+                                                            alt="Atm Transfer">
+                                                    </picture>
+                                                    <figcaption>
+                                                        <span class="text-caption">{{ steping.description }}</span>
+                                                    </figcaption>
+                                                </figure>
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,272 @@
+{% load currency_filters i18n %}
+{% load thumbnail %}
+{% load staticfiles %}
+{% load utils_tags %}
+{% load function_tags %}
+
+{# label infornasi #}
+<tr>
+    <td>
+        <table
+            border="0"
+            width="100%"
+            cellpadding="16"
+            style="background: #009ab2"
+            cellspacing="0"
+        >
+            <tbody>
+            <tr style="background:#f6f6f6">
+                <td
+                    align="center"
+                    class="content-text"
+                    style="font-size: 22px;font-weight: bold;font-style: normal;line-height: 1.36;letter-spacing: normal;"
+                >
+                    Informasi Pesanan Anda
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>{# label infornasi #}
+{# address #}
+<tr>
+    <td class="content-wrap">
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="content-block">
+                    <table class="order">
+                        <tbody>
+                        <tr>
+                            <td class="content-block">
+                                <p class="content-text"
+                                   style="font-family: Rubik;
+                                   font-size: 20px;
+                                   font-weight: 500;
+                                   font-style: normal;
+                                   font-stretch: normal;
+                                   line-height: 1.2;
+                                   letter-spacing: normal;">
+                                    Alamat Pengiriman:</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="content-block">
+                                <p class="content-text">{{ order.shipping_address.name }}</p>
+                                <p class="content-text">
+                                    {{ order.shipping_address.line1 }},
+                                    {{ order.shipping_address.village.name }},
+                                    {{ order.shipping_address.subdistrict.name }},
+                                    {{ order.shipping_address.regency_district.name }},
+                                    {{ order.shipping_address.province.name }} -
+                                    {{ order.shipping_address.postcode }}
+                                </p>
+                                <p class="content-text">
+                                    Telpon/HP: {{ order.shipping_address.phone_number.as_national }}</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+{# address #}
+<tr>
+    <td>
+        <table border="0" width="100%" cellpadding="8" cellspacing="0">
+            <tbody>
+            <tr style="background:#f6f6f6">
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class="content-wrap">
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="content-block">
+                    <table class="order">
+                        <tbody>
+                        <tr>
+                            <td class="content-block">
+                                <p
+                                    class="content-text"
+                                    style="font-family: Rubik;
+                                        font-size: 20px;
+                                        font-weight: 500;
+                                        font-style: normal;
+                                        font-stretch: normal;
+                                        line-height: 1.2;
+                                        letter-spacing: normal;"
+                                >
+                                    Detail Pesanan:
+                                </p>
+                            </td>
+                        </tr>
+                        {# order-list #}
+                        {% for line in order.lines.all %}
+                            {% with unit_price=line.line_price_after_discounts_incl_tax %}
+                                <tr>
+                                    <td>
+                                        <table
+                                            cellpadding="0"
+                                            cellspacing="0"
+                                            width="100%"
+                                            style="border: 1px solid #e6e6e6;padding: 10px;empty-cells: show;"
+                                        >
+                                            <thead>
+                                            <tr>
+                                                <th style="width:90px;" rowspan="1">
+                                                    <p style="width: 78px;margin-right: 5px;height: 78px;position: relative;">
+                                                        {% with image=line.product.primary_image %}
+                                                            {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                                                <img
+                                                                    style="border:1px solid #e6e6e6;max-height: 100%;max-width: 100%; position:absolute; top: 0; bottom: 0; left:0; right: 0;margin: auto;"
+                                                                    width="100%"
+                                                                    src="
+
+
+                                                                        {% get_scheme %}{{ order.site.domain }}{{ thumb.url }}"
+                                                                    alt="{{ line.product.get_title }}">
+                                                            {% endthumbnail %}
+                                                        {% endwith %}
+                                                    </p>
+                                                </th>
+                                                <th style="vertical-align: top" colspan="2">
+                                                    <p class="content-text"
+                                                       style="font-family: Muli;font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.2;letter-spacing: normal;color: #343534;"
+                                                    >
+                                                        {{ line.title }}
+                                                    </p>
+                                                    <p class="text-caption" style="margin:0">
+                                                        Warna
+                                                    </p>
+                                                    <p class="text-body-1">
+                                                        {% for av in line.product.attribute_values.all %}
+                                                            {% if av.attribute.name == "Ukuran" or av.attribute.name == "ukuran" %}
+                                                                {% if av.value_as_html %}
+                                                                    <span
+                                                                        class="text-body-1">{{ av.value_as_html }}</span>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                            {% if av.attribute.name == "Warna" or av.attribute.name == "warna" %}
+                                                                {% if av.value_as_html %}
+                                                                    <span
+                                                                        style="background: {{ av.value_as_html }};padding: 1px 20px;margin-right: 10px;border-radius: 4px;"></span>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </p>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        width="100%"
+                                                        style="empty-cells: show;"
+                                                    >
+                                                        <thead>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="text-caption">Harga</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-caption">Qty</span>
+                                                            </td>
+                                                            <td style="text-align: right"
+                                                            >
+                                                                <span class="text-caption">Sub Total</span>
+                                                            </td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <span
+                                                                    class="text-body-1">{{ unit_price|currency:order.currency }}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-body-1">{{ line.quantity }}</span>
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                <span
+                                                                    class="text-body-1">{% multiply line.quantity unit_price as subtotal %}
+                                                                    {{ subtotal|currency:order.currency }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            {% endwith %}
+                        {% endfor %}
+                        {# order-list #}
+                        {# summary-price #}
+                        <tr>
+                            <td>
+                                <table class="order-items" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                    <tr>
+                                        <td class="alignleft summary-left content-text" style="font-size:18px"></td>
+                                        <td class="alignleft summary-center content-text" style="font-size:18px">
+                                            Total:
+                                        </td>
+                                        <td class="alignright summary-price content-text" style="font-size:18px">
+                                            {% total_before_voucher order.basket_total_incl_tax vouchers as total_before_voucher %}
+                                            {{ total_before_voucher|currency:order.currency }}
+                                        </td>
+                                    </tr>
+                                    {% get_voucher_list order.discounts as vouchers %}
+                                    {% if vouchers and vouchers.category != 'Shipping' %}
+                                        <tr>
+                                            <td class="alignleft summary-left content-text" style="font-size:18px"></td>
+                                            <td class="alignleft summary-center content-text" style="font-size:18px">
+                                                Hemat:
+                                            </td>
+                                            <td class="alignright summary-price content-text" style="font-size:18px">
+                                                -{{ vouchers.amount|currency:order.currency }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td class="alignleft summary-left content-text" style="font-size:18px"></td>
+                                        <td class="alignleft summary-center content-text" style="font-size:18px">Ongkos
+                                            Kirim:
+                                        </td>
+                                        <td class="alignright summary-price content-text" style="font-size:18px">
+                                            {{ order.shipping_incl_tax|currency:order.currency }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="alignleft summary-left content-text" style="font-size:18px"></td>
+                                        <td class="alignleft summary-center content-text"
+                                            style="font-size:18px;font-weight: bold">Total Belanja:
+                                        </td>
+                                        <td class="alignright summary-price content-text" style="font-size:18px">
+                                            {{ order.total_incl_tax|currency:order.currency }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        {# summary-price #}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>

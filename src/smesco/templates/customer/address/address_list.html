@@ -1,0 +1,191 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block tabcontent %}
+    <div class="container">
+        {% if addresses %}
+            <div class="gdn-title">
+                <h1 class="text-title-1 text-title-2">Alamat Kirim</h1>
+                <a href="" class="open-modal btn btn-link add-address" data-modal="form-create-address">Tambah
+                    Alamat</a>
+            </div>
+            <section id="address-list">
+                {% for form_address in addresses %}
+                    <div class="address-list-box">
+                        {% with form_address.instance as address %}
+                            <div class="row address-data">
+                                {% for field in address.active_address_fields %}
+                                    <div class="col-lg-12 col-xs-12 col-sm-12 ">
+                                        <span class="text-body-1 d-block">{{ field }} {{ key }}</span>
+                                    </div>
+                                {% endfor %}
+
+                                <div class="col-lg-12 col-xs-12 col-sm-12">
+                                    <div class="addres-list-button">
+                                        <ul class="ul-list-none">
+                                            <li>
+                                                <a href="#" data-modal="form-update-address-{{ address.id }}"
+                                                   class="btn-link btn open-modal add-address">Ubah</a>
+                                            </li>
+                                            {% if not address.is_default_for_billing %}
+                                                <li>
+                                                    <a class="btn-link btn open-modal"
+                                                       data-href="{% url 'customer:address-new-delete' pk=address.id %}"
+                                                       data-modal="form-remove-address">Hapus</a>
+                                                </li>
+                                            {% endif %}
+                                            {% if not address.is_default_for_billing %}
+                                                <li>
+                                                    <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_billing' %}"
+                                                       class="btn-link btn">Jadikan Alamat Utama</a>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <span class="btn text-body-1">Alamat Utama</span>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="gdn-modal"
+                                 id="form-update-address-{{ address.id }}">
+                                <div class="gdn-modal-content gdn-modal-content-scroll">
+                                    <div class="gdn-modal-header">
+                                        <span class="text-title-3">
+                                            Ubah alamat
+                                        </span>
+                                        <button
+                                            data-modal="form-update-address-{{ address.id }}"
+                                            type="button"
+                                            class="btn btn-link open-modal text-black gdn-modal-header-close">
+                                            <i class="fa ion-android-close"></i>
+                                        </button>
+                                    </div>
+                                    <form id="update_address_form_{{ address.id }}"
+                                          action="{% url 'customer:address-update' address.id %}" method="post"
+                                          class="gdn-form well">
+                                        {% csrf_token %}
+                                        <div class="gdn-modal-body">
+                                            {% include "partials/form_fields.html" with form=form_address form_uniq_id=address.id %}
+                                        </div>
+                                        <div class="gdn-modal-footer">
+                                            <div class="form-group">
+                                                <button class="btn btn-block btn-black" type="submit"
+                                                        data-loading-text="Menyimpan...">Simpan
+                                                </button>
+                                                <a href="#" style="text-align:center;"
+                                                   data-modal="form-update-address-{{ address.id }}"
+                                                   class="btn-link btn-block text-center open-modal">Kembali</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+                {% endfor %}
+            </section>
+        {% else %}
+            <div class="gdn-title">
+                <h1 class="text-title-1 text-title-2">Alamat Kirim</h1>
+            </div>
+            {% with "Kamu belum memiliki alamat kirim, silahkan melakukan transaksi atau tambah alamat pengiriman kamu" as wording %}
+                {% include "partials/data-not-found.html" with js_class="add-address" id="product-list-not-found" wording=wording js="form-create-address" button_name="Tambah Alamat" href="customer:address-create" id="product-list-not-found" image="address-list-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+            {% endwith %}
+        {% endif %}
+
+        <div class="gdn-modal"
+             id="form-create-address">
+            <div class="gdn-modal-content gdn-modal-content-scroll">
+                <div class="gdn-modal-header">
+                        <span class="text-title-3">
+                            Tambah Alamat Anda
+                        </span>
+                    <button
+                        data-modal="form-create-address"
+                        type="button"
+                        class="btn btn-link open-modal text-black gdn-modal-header-close">
+                        <i class="fa ion-android-close"></i>
+                    </button>
+                </div>
+                <form id="profile_form" action="{{ request.get_full_path }}" method="post"
+                      class="gdn-form well">
+                    {% csrf_token %}
+                    <div class="gdn-modal-body">
+                        {% include "partials/form_fields.html" with form=form.user_address_form %}
+                    </div>
+                    <div class="gdn-modal-footer">
+                        <div class="form-group">
+                            <button class="btn btn-block btn-black" type="submit" name="action"
+                                    value="user_address_form" data-loading-text="Menyimpan...">Simpan
+                            </button>
+                            <a href="#" style="text-align:center;" data-modal="form-create-address"
+                               class="btn-link btn-block text-center open-modal">Kembali</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="gdn-modal"
+             id="form-remove-address">
+            <div class="gdn-modal-content gdn-modal-content-scroll">
+                <div class="gdn-modal-header">
+        <span class="text-title-3">
+            Hapus Alamat Anda
+        </span>
+                    <button
+                        data-modal="form-remove-address"
+                        type="button"
+                        class="btn btn-link open-modal text-black gdn-modal-header-close">
+                        <i class="fa ion-android-close"></i>
+                    </button>
+                </div>
+                <div class="gdn-modal-body">
+                    <p>
+                        apakah anda yakin ingin menghapus alamat anda ?
+                    </p>
+                </div>
+                <div class="gdn-modal-footer">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-xs-6">
+                            <a href="#" style="text-align:center;" data-modal="form-remove-address"
+                               class="btn-link btn-block text-center open-modal">Kembali</a>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-xs-6">
+                            <a href=""
+                               class="btn btn-block btn-black modal-href-link">Hapus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    var primaryKey = '';
+    {% if form.instance.pk %}
+        primaryKey = {{ form.instance.pk }}
+    {% endif %}
+
+    var address_data = {
+    state:"{% url 'load-address-states' %}",
+    district:"{% url 'load-address-districts' %}",
+    subDistrict:"{% url 'load-address-subdistricts' %}",
+    village:"{% url 'load-address-villages' %}",
+    postCode:"{% url 'load-address-postcode' %}",
+    primaryKey:primaryKey,
+    }
+    oscar.addressEvent.init(address_data);
+    {% for form_address in addresses %}
+        {% with form_address.instance.pk as address_id %}
+            var address_data_{{ address_id }} = Object.create(address_data)
+            address_data_{{ address_id }}.primaryKey = {{ address_id }}
+            var adddress_{{ address_id }} = new oscar.addressEvent.init(address_data_{{ address_id }});
+        {% endwith %}
+    {% endfor %}
+{% endblock %}
+

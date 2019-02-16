@@ -1,0 +1,69 @@
+{% load i18n %}
+{% load staticfiles %}
+<dl>
+    <dt class="nav-header"><span class="text-heading-3 text-black">{{ name }}</span> <i class="fa fa-angle-down"></i>
+    </dt>
+    {% if name == 'Kisaran Harga' %}
+        <dd class="dd-parent">
+            <div class="d-block">
+                <form action="">
+                    <div class="form-group price-filter">
+                        <input type="text" placeholder="500xxx"
+                               class="text-right form-control display-block sliderValue" data-index="0"
+                               value=""/>
+                    </div>
+
+                    <div class="form-group price-filter">
+                        <input type="text" placeholder="900xxx"
+                               class="text-right form-control display-block sliderValue" data-index="1"
+                               value=""/>
+                    </div>
+                </form>
+                <div class="button-filter-price">
+                    <a style="display:none;" id="submit_price" href="" class="hidden btn btn-black btn-block">Filter</a>
+                    <button type="button" style="cursor: not-allowed;background-color: #e6e6e6;border-color: #e6e6e6;"
+                            class="btn btn-black btn-block">Filter
+                    </button>
+                </div>
+            </div>
+            <div id="slider" class="hidden"></div>
+        </dd>
+    {% endif %}
+    {% if name != 'Kisaran Harga' %}
+        {% for item in items %}
+            <dd class="dd-parent">
+                <label for="{{ item.name }}">
+                    {% if item.selected %}
+                        <input id="{{ item.name }}" class="facet_checkbox" type="checkbox" name="{{ item.name }}"
+                               checked/>
+                        <span class="checkmark"></span>
+                        <input class="facet_url" type="hidden" name="url_for_{{ item.name }}"
+                               value="{{ item.deselect_url }}"/>
+                        <strong>{{ item.name }}</strong>
+                    {% else %}
+                        {% if item.disabled %}
+                            <input id="{{ item.name }}" type="checkbox" name="{{ item.name }}" disabled/>
+                            <span class="checkmark"></span>
+                            <span>{{ item.name }}</span>
+                        {% else %}
+                            <input id="{{ item.name }}" class="facet_checkbox" type="checkbox" name="{{ item.name }}"/>
+                            <span class="checkmark"></span>
+                            <input class="facet_url" type="hidden" name="url_for_{{ item.name }}"
+                                   value="{{ item.select_url }}"/>
+                            <a href="{{ item.select_url }}">{{ item.name }}</a>
+                        {% endif %}
+                    {% endif %}
+                </label>
+            </dd>
+        {% endfor %}
+    {% endif %}
+    <button type="button"
+            class="text-right btn-block btn btn-link all-read-more-button-category show-category"
+            data-name="show" style="display:none!important">Lihat
+        Selengkapnya
+    </button>
+    <button type="button"
+            class="all-read-more-button-category hide-category btn-block btn btn-link"
+            data-name="hide" style="display:none!important">Sembunyikan
+    </button>
+</dl>

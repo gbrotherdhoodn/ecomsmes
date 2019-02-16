@@ -1,0 +1,338 @@
+{% extends "layout.html" %}
+
+{% load history_tags %}
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load staticfiles %}
+{% load product_tags %}
+{% load display_tags %}
+{% load i18n %}
+{% load purchase_info_tags %}
+{% load utils_tags %}
+
+{% block title %}
+    {{ product.title }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+    {{ product.description|default:""|striptags }}
+{% endblock %}
+
+{% block header %}
+{% endblock header %}
+
+{% block breadcrumbs %}
+    <div class="gdn-page">
+    <div class="container">
+        <ul class="gdn-breadcrumb">
+            <li>
+                <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+            </li>
+            {% with category=product.categories.all.0 %}
+                {% for c in category.get_ancestors_and_self %}
+                    <li>
+                        <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                    </li>
+                {% endfor %}
+                <li class="active">{{ product.title }}</li>
+
+                {% get_back_button as backbutton %}
+                {% if backbutton %}
+                    <li class="pull-right">
+                        <a href="{{ backbutton.url }}">
+                            <i class="icon-arrow-left"></i> {{ backbutton.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endwith %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% block alert_message %}
+        <div class="gdn-cart-alert">
+            {% include "partials/alert_messages.html" with cart=True hidden=True %}
+        </div>
+    {% endblock alert_message %}
+    <article class="gdn-product-detail">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-sm-12 col-xs-12">
+                    {% block product_gallery %}
+                        {% include "catalogue/partials/gallery.html" with product=product %}
+                    {% endblock %}
+                    <div class="col-sm-12 col-xs-12">
+                        <div id="sidebar-mobile"></div>
+                    </div>
+                    {% block product_info %}
+                        {% block product_description %}
+                            <div class="gdn-tab" id="tab-read-more">
+                                <ul class="ul-list-none gdn-tab-nav">
+                                    <li>
+                                        <a class="active tab-button" href="#info"
+                                           data-id="info">DESKRIPSI PRODUK</a>
+                                    </li>
+                                    <li>
+                                        <a href="#spec" data-id="spec">SPESIFIKASI</a>
+                                    </li>
+                                </ul>
+                                <div class="gdn-tab-content">
+                                    <div id="info" class="desc active">
+                                        <div class="desc-tab-content" id="desc-tab-desc">
+                                            {% if product.is_child %}
+                                                <p>{{ product.parent.description|safe }}</p>
+                                            {% else %}
+                                                <p>{{ product.description|safe }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="gdn-tab-read-more">
+                                            <a class="tab-read-more" data-id="info" id="info-readmore"
+                                               href="javascript:void(0);">Selengkapnya</a>
+                                        </div>
+                                    </div>
+                                    <div id="spec" class="desc">
+                                        <div class="desc-tab-content" id="desc-tab-spec">
+                                            <table class="table table-striped">
+                                                {% if product.upc %}
+                                                    <tr>
+                                                        <th>UPC</th>
+                                                        <td>{{ product.upc }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% purchase_info_for_product request product as session %}
+                                                {% if session.price.exists %}
+                                                    <tr>
+                                                        <th>Tersedia</th>
+                                                        <td>{{ session.availability.message }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% for av in product.attribute_values.all %}
+                                                    <tr>
+                                                        <th>{{ av.attribute.name }}</th>
+                                                        <td>{{ av.value_as_html }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% iffeature "reviews" %}
+                                                    <tr>
+                                                        <th>Total Review</th>
+                                                        <td>{{ product.num_approved_reviews }}</td>
+                                                    </tr>
+                                                {% endiffeature %}
+                                            </table>
+                                        </div>
+                                        <div class="gdn-tab-read-more">
+                                            <a class="tab-read-more" data-id="spec" id="spec-readmore"
+                                               href="javascript:void(0);">Selengkapnya</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endblock %}
+                    {% endblock %}
+
+                    {% iffeature "reviews" %}
+                        {% block product_review %}
+                            <div id="add-review" class="review_add">
+                                <form id="add_review_form" class="gdn-form review-form" method="post"
+                                      action="./#addreview">
+                                    <fieldset>
+                                        <div class="d-block with-margin-bottom">
+                                            <span class="text-heading-1">Beri Ulasan</span>
+                                        </div>
+                                        {% csrf_token %}
+                                        <div
+                                            class="review-form-star reviewrating form-group {% if forms.score.errors %}error{% endif %}">
+                                            <label for="{{ forms.score.auto_id }}" class="control-label required">
+                                                Rating <span>*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <div
+                                                    class="star-rating review-{{ forms.score.value }}">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ forms.score }}
+                                                </div>
+
+                                                {% for error in form.score.errors %}
+                                                    <span class="error-block"><i
+                                                        class="icon-exclamation-sign"></i> {{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        {% include 'partials/form_field.html' with field=forms.title %}
+                                        {% include 'partials/form_field.html' with field=forms.body %}
+                                        {% if forms.name %}
+                                            {% include 'partials/form_field.html' with field=forms.name %}
+                                        {% endif %}
+                                        {% if forms.email %}
+                                            {% include 'partials/form_field.html' with field=forms.email %}
+                                        {% endif %}
+
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-sm-6 col-xs-6">
+                                                <a href="#" class="btn btn-secondary btn-block cancel-review">Batal</a>
+                                            </div>
+                                            <div class="col-lg-6 col-sm-6 col-xs-6">
+                                                <button type="submit" class="btn btn-block btn-primary"
+                                                        data-loading-text="Menyimpan....">Simpan
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            {% is_buyed product request.user as user_buyed %}
+                            <section class="gdn-review" id="list-review">
+                                <div id="reviews" class="sub-header">
+                                    <div
+                                        class="d-flex between-sm between-lg between-xs middle-lg middle-sm middle-xs">
+                                        <span
+                                            class="text-heading-1">Ulasan ( {{ product.num_approved_reviews }} )</span>
+                                        {% if product|is_review_permitted:user and user_buyed %}
+                                            {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                                            <a class="btn btn-link add-review"
+                                               href="#">Tambah Ulasan</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if product.num_approved_reviews == 0 %}
+                                    <p class="text-body-1">
+                                        {% if product|is_review_permitted:user and user_buyed %}
+                                            {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                                            Belum ada ulasan untuk produk ini, yuk jadi yang pertama..
+                                        {% else %}
+                                            Belum ada ulasan untuk produk ini, yuk jadi yang pertama..
+                                        {% endif %}
+                                    </p>
+                                    <div class="review-footer">
+                                        {#                                        {% if product|is_review_permitted:user and user_buyed %}#}
+                                        {#                                            {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}#}
+                                        {#                                            <a class="btn btn-link add-review"#}
+                                        {#                                               href="#">Beri Ulasan</a>#}
+                                        {#                                        {% endif %}#}
+                                    </div>
+                                {% else %}
+                                    {% iffeature "reviews" %}
+                                        {% include "catalogue/reviews/partials/review_stars.html" %}
+                                    {% endiffeature %}
+                                    <div class="review-body" id="review-list-data-list">
+                                    </div>
+                                {% endif %}
+                            </section>
+
+
+                        {% endblock product_review %}
+                    {% endiffeature %}
+                </div>
+                {% block product_main %}
+                    <div class="col-lg-5 col-sm-12 col-xs-12">
+                        <div id="sidebar-desktop" class="gdn-product-detail-sidebar">
+                            <div id="sidebar">
+                                <h1 class="text-title-1 text-title-2 text-black with-margin-bottom word-wrap">{{ product.get_title }}</h1>
+                                <div class="with-margin-bottom">
+                                    {% block product_stock_record %}
+                                        {% include "catalogue/partials/stock_record.html" with verbose=1 detail=True %}
+                                    {% endblock %}
+                                </div>
+
+                                {% block product_basket_form %}
+                                    {% include "catalogue/partials/add_to_basket_form.html" %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+
+    </article><!-- End of product page -->
+    {% recommended_product product as all_recommended_products %}
+    {% with all_recommended_products|slice:":6" as recommended_products %}
+        {% if recommended_products %}
+            <section id="recomend-product">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="gdn-title">
+                                <h4 class="text-title-3 text-title-4 text-black">
+                                    Produk Lainnya
+                                </h4>
+                                <a href="/catalogue/?selected_facets=highlight%3ATrue" class="btn btn-link">Lihat
+                                    Semua</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container container-mobile-slider">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="gdn-slider">
+                                <div class="swiper-container slider-product">
+                                    <div class="swiper-wrapper">
+                                        {% for product in recommended_products %}
+                                            <div class="swiper-slide gdn-slider-mid-mobile"
+                                                 style="height: unset">
+                                                {% render_product product %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Add Arrows -->
+                                    <div class="gdn-slider-button-left">
+                                        <i class="fa fa-chevron-left"></i>
+                                    </div>
+                                    <div class="gdn-slider-button-right">
+                                        <i class="fa fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+
+
+{% endblock content %}
+
+{% block extrascripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block onbodyload %}
+    oscar.init();
+    {% with all_images=product.get_all_images %}
+        {% if all_images|length > 1 %}
+            oscar.slider.productDetailSlide();
+        {% endif %}
+    {% endwith %}
+
+
+
+    oscar.uiAnimate.quantity();
+    oscar.productDetail.init();
+    oscar.uiAnimate.read();
+    let token = "{{ csrf_token }}"
+    let love = "{% url 'catalogue:ajax-add-delete-wish-list' product.slug product.id %}"
+    let options = {
+    url:"{% url 'catalogue:ajax-review-list' product.slug product.id %}",
+    ratingCalculate:"{{ product.calculate_rating|floatformat:"1" }}",
+    ratingStar:"{{ product.calculate_rating|floatformat:"1" }}",
+    token:token
+    }
+    let optionsLove = {
+    url:"{% url 'catalogue:ajax-add-delete-wish-list' product.slug product.id %}",
+    token:token
+    }
+    oscar.review.init(options)
+    oscar.love.init(optionsLove)
+{% endblock %}

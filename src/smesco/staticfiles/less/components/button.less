@@ -1,0 +1,276 @@
+//
+// Buttons
+// --------------------------------------------------
+
+// Base styles
+// --------------------------------------------------
+
+.btn {
+    font-size: 14px;
+    display: inline-block;
+    margin-bottom: 0;
+    font-family: @font-primary;
+    font-weight: @btn-font-weight;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid @grey;
+    white-space: nowrap;
+    line-height: @btn-line-height;
+    outline: none;
+
+    .button-size(
+        @padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base
+    );
+    .user-select(none);
+
+    &,
+    &:active,
+    &.active {
+        &:focus,
+        &.focus {
+            .tab-focus();
+
+        }
+    }
+
+    &:hover,
+    &:focus,
+    &.focus {
+        color: @btn-default-color;
+        text-decoration: none;
+        outline: none;
+    }
+
+    &:active,
+    &.active {
+        outline: none;
+        background-image: none;
+        .box-shadow(none);
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        cursor: @cursor-disabled;
+        pointer-events: none;
+        opacity: 0.7;
+        .box-shadow(none);
+    }
+
+    &-rounded {
+        border-radius: 50px;
+    }
+}
+
+// Alternate buttons
+// --------------------------------------------------
+
+.btn-black {
+    // color || background || border color
+    .button-variant(@white; @black; @black);
+}
+
+.btn-primary {
+    // color || background || border color
+    .button-variant(@black; @primary; @primary);
+}
+
+
+.btn-secondary {
+    // color || background || border color
+    .button-variant(@black; @white; @primary);
+}
+
+// Link buttons
+// -------------------------
+
+// Make a button look and behave like a link
+
+
+.btn-link {
+    color: @primary-dark;
+    font-weight: normal;
+    border-radius: 0;
+    padding: 10px 0;
+    text-align: left;
+    letter-spacing: 0.5px;
+    font-size: 16px;
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+
+    &:hover,
+    &:focus {
+        //font-weight: normal;
+        color: @link-hover-color;
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @btn-link-disabled-color;
+            text-decoration: none;
+        }
+    }
+}
+
+// Button Sizes
+// --------------------------------------------------
+
+.btn-lg {
+    .button-size(
+        @padding-large-vertical; @padding-large-horizontal; @font-size-small; @line-height-large; @border-radius-large
+    );
+}
+
+.btn-sm {
+    .button-size(
+        @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @border-radius-small
+    );
+}
+
+.btn-variant {
+    .button-size(
+        10px; 40px; 14px; normal; 0;
+    );
+    .button-variant(@black; @white; @primary);
+
+    &.active {
+        cursor: pointer;
+        .button-variant(@black; @primary; @primary);
+
+        &.active {
+
+            cursor: pointer;
+            color: #3c3c46;
+            background-color: #fddfe1;
+            border-color: #fddfe1;
+        }
+    }
+
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height: unset;
+}
+
+// Block button
+// --------------------------------------------------
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+// Vertically space out multiple block buttons
+.btn-block + .btn-block {
+    margin-top: 5px;
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+    &.btn-block {
+        width: 100%;
+    }
+}
+
+.button-variant(@color; @background; @border) {
+    color: @color;
+    background-color: @background;
+    border-color: @border;
+
+    &:focus,
+    &.focus {
+        color: @color;
+        background-color: darken(@background, 20%);
+        border-color: darken(@border, 20%);
+        outline: none;
+    }
+    &:hover {
+        color: @color;
+        background-color: darken(@background, 10%);
+        border-color: darken(@border, 10%);
+    }
+    &:active,
+    &.active,
+    .open > .dropdown-toggle& {
+        color: @color;
+        background-color: darken(@background, 20%);
+        border-color: darken(@border, 20%);
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: @color;
+            background-color: darken(@background, 20%);
+            border-color: darken(@border, 20%);
+            outline: 0;
+
+        }
+    }
+    &:active,
+    &.active,
+    .open > .dropdown-toggle& {
+        background-image: none;
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus,
+        &.focus {
+            background-color: darken(@background, 20%);
+            border-color: darken(@border, 20%);
+            color: darken(@color, 20%);
+            outline: none;
+        }
+    }
+
+    .badge {
+        color: @background;
+        background-color: @color;
+    }
+}
+
+// Button sizes
+.button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+    padding: @padding-vertical @padding-horizontal;
+    font-size: @font-size;
+    line-height: @line-height;
+    border-radius: @border-radius;
+}
+
+
+.btn-icon {
+    padding: 5px 22px;
+    display: table;
+    display: table;
+    margin-left: auto;
+
+    i {
+        vertical-align: middle;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+}
+

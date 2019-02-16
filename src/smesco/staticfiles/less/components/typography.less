@@ -1,0 +1,95 @@
+/* less/components/_typography.less */
+/* Typography value and name class for global Typography  */
+/* Sort by |font-family|font-size|font-weight|font-style|font-strectch|line-height|letter-spacing| */
+
+@font-primary: Rubik;
+@font-secondary: Merriweather;
+@title-1: @font-secondary, "36px", bold, normal, normal, 1.22, "0.4px";
+@title-3: @font-secondary, "26px", bold, normal, normal, 1.23, normal;
+@body-1: @font-primary, "18px", normal, normal, normal, 1.78, "0.6px";
+@overline: @font-primary, "10px", normal, normal, normal, normal, "0.4px";
+@placeholder: @font-primary, "18px", normal, normal, normal, 1.78, "0.6px";
+@subtitle-1: @font-primary, "24px", normal, normal, normal, 1.33, "0.2px";
+@subtitle-2: @font-primary, "20px", normal, normal, normal, 1.2, "0.1px";
+@button: @font-primary, "14px", bold, normal, normal, normal, "0.8px";
+@caption: @font-primary, "12px", 300, normal, normal, normal, "0.8px";
+@heading-1: @font-primary, "24px", 500, normal, normal, 1.25, normal;
+@heading-3: @font-primary, "20px", 500, normal, normal, 1.2, normal;
+@paragraph: @font-primary, "18px", normal, normal, normal, 1.25, "0.56px";
+/* Typography key when loop the mixins create Typography */
+@fontKey: font-family, font-size, font-weight, font-style, font-stretch,
+line-height, letter-spacing;
+
+// responsive font
+@title-2: @font-secondary, "30px", bold, normal, normal, 1.22, "0.4px"; // responsive
+@title-4: @font-secondary, "24px", bold, normal, normal, 1.33, normal; // responsive
+@body-2: @font-primary, "16px", normal, normal, normal, 1.63, "0.3px"; // responsive
+@heading-2: @font-primary, "22px", 500, normal, normal, 1.36, normal; // responsive
+@heading-4: @font-primary, "18px", 500, normal, normal, 1.33, normal; // responsive
+
+/* Typography value collect all data variable and value for Typography*/
+@typographyData: title-1, title-3, body-1, overline,
+placeholder, button, caption, heading-1, heading-3, paragraph;
+
+.mixin-class-font("text", @typographyData);
+@media screen and (max-width: 980px) {
+    @typographyDataMobile: title-2, title-4, body-2, heading-2, heading-4;
+    .mixin-class-font("text", @typographyDataMobile);
+}
+
+/* less/components/_color.less */
+
+@left: left;
+@right: right;
+@center: center;
+
+@text-aligin: left, right, center;
+
+.loop-function-create-class("text", "text-align", @text-aligin); // text aligin
+
+@media screen and (max-width: @m-break) {
+    .loop-function-create-class("text-mobile", "text-align", @text-aligin); // text aligin
+}
+
+
+/* mixin class font and call mixins font value display */
+/* mixin variable | namePrefix is Text | class data Typography | */
+
+
+.mixin-class-font(@namePrefix, @data) {
+    @lengthMixins: length(@data);
+    .loop(@key) when (@key > 0) {
+        @color: e(extract(@data, @key));
+        @name: extract(@data, @key);
+        @nameColor: %("%a", @name);
+        @nameColors: ~".@{namePrefix}-@{nameColor}";
+        @{nameColors} {
+            .mixing-font(@nameColors, @@color);
+        }
+        .loop(@key - 1);
+    }
+    .loop(0) {
+    }
+    .loop(@lengthMixins);
+}
+
+/* mixin font value display */
+.mixing-font(@name, @data) {
+    @lengthData: length(@data);
+    .loop(@index) when (@index > 0) {
+        @result: e(extract(@data, @index));
+        @value: e(extract(@fontKey, @index));
+            @{value}: ~"@{result}";
+        .loop(@index - 1);
+    }
+    .loop(0) {
+    }
+    .loop(@lengthData);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}

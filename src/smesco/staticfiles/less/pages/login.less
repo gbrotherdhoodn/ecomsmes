@@ -1,0 +1,41 @@
+.register-content {
+    ul {
+        li {
+            padding: 0 15px;
+        }
+    }
+}
+
+.login-separator {
+    height: 100%;
+    width: 1px;
+    background-color: @light-grey;
+    margin: 0 auto;
+}
+
+.register-box {
+    padding: 40px;
+    border: 1px solid @black;
+}
+
+.register-image {
+    padding: 40px;
+}
+
+
+@media screen and (max-width: @m-break) {
+    .register-image {
+        display: none;
+    }
+
+    .register-box {
+        padding: 0;
+        border: none;
+    }
+
+    .login-separator {
+        height: 1px;
+        width: 100%;
+        margin: 60px 0 80px 0;
+    }
+}

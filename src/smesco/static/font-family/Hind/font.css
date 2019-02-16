@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Hind-Regular';
+  src: url('Hind-Regular.eot');
+  src: url('Hind-Regular.woff2') format('woff2'),
+       url('Hind-Regular.woff') format('woff'),
+       url('Hind-Regular.ttf') format('truetype'),
+       url('Hind-Regular.svg#Hind-Regular') format('svg'),
+       url('Hind-Regular.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+

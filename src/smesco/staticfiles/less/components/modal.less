@@ -1,0 +1,131 @@
+.gdn-modal {
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 10, 10, 0.4);
+    z-index: 25;
+
+    &-close {
+        position: relative;
+        outline: none;
+
+        > button, > a {
+            position: absolute;
+            right: 0;
+            top: -20px;
+            font-size: 25px;
+            outline: none;
+            color: @black;
+            border: none;
+        }
+
+    }
+
+
+    &-content {
+        width: 514px;
+        border-radius: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        margin: 0 auto;
+        left: 50%;
+        background-color: @white;
+    }
+
+    &-header {
+        display: block;
+        width: 100%;
+        padding: 40px 30px 10px 30px;
+        position: relative;
+
+        &-close {
+            padding: 12px;
+            top: 0;
+            right: 0;
+            color: @black;
+            position: absolute;
+
+            &:hover {
+                color: darken(@black, 10%);
+            }
+        }
+
+        &-title {
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.33;
+            letter-spacing: normal;
+            color: @grey;
+            font-size: 24px;
+        }
+    }
+
+    &-body {
+        font-size: 18px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.78;
+        letter-spacing: 0.6px;
+        color: @grey;
+        display: block;
+        width: 100%;
+        padding: 10px 30px;
+    }
+
+    &-content-scroll {
+        .gdn-modal-body {
+            max-height: calc(80vh - 10em);
+            overflow: auto;
+        }
+    }
+
+    &-footer {
+        display: block;
+        width: 100%;
+        padding: 20px 30px;
+
+        &.right {
+            display: flex;
+            justify-content: flex-end;
+
+            a, button {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .gdn-modal {
+        &-content {
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            transform: unset;
+            left: 0;
+            right: 0;
+
+            &-scroll {
+                .gdn-modal-body {
+                    max-height: calc(80vh - 70px);
+                }
+            }
+
+            &-mobile {
+                top: unset;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+            }
+        }
+    }
+}
+
+

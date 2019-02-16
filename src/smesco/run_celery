@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Running celery and celerybeat for local django in foreground"
+celery -A jimshoney worker --beat -E --loglevel=DEBUG --logfile=jimshoney_celery.log

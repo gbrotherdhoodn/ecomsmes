@@ -1,0 +1,57 @@
+{% extends "catalogue/detail.html" %}
+{% load i18n %}
+
+{% block product_review %}
+    <div id="addreview" class="review_add">
+        <form id="add_review_form" class="gdn-form review-form" method="post" action="./#addreview">
+            <fieldset>
+                <div class="d-block with-margin-bottom">
+                    <span class="text-heading-1">Beri Ulasan</span>
+                </div>
+                {% csrf_token %}
+                <div class="review-form-star reviewrating form-group {% if form.score.errors %}error{% endif %}">
+                    <label for="{{ form.score.auto_id }}" class="control-label required">
+                        Rating <span>*</span>
+                    </label>
+                    <div class="controls" style="margin:-11px 0;">
+                        <div
+                            class="star-rating {% if form.score.value == '1' %}One{% elif form.score.value == '2' %}Two{% elif form.score.value == '3' %}Three{% elif form.score.value == '4' %}Four{% elif form.score.value == '5' %}Five{% endif %}">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+
+                    </div>
+                    {{ form.score }}
+                    {% for error in form.score.errors %}
+                        <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% include 'partials/form_field.html' with field=form.title %}
+
+
+                {% include 'partials/form_field.html' with field=form.body %}
+                {% if form.name %}
+                    {% include 'partials/form_field.html' with field=form.name %}
+                {% endif %}
+                {% if form.email %}
+                    {% include 'partials/form_field.html' with field=form.email %}
+                {% endif %}
+
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6 col-xs-6">
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-secondary btn-block">Batal</a>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6">
+                        <button type="submit" id="review-button" class="btn btn-block btn-primary"
+                                data-loading-text="Menyimpan....">Simpan
+                        </button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

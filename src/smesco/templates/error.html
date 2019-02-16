@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+
+{#{% include "partials/nav_accounts.html" %}#}
+{% block content_wrapper %}
+    <div class="gdn-page">
+        <div class="container">
+            {% block error_message %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

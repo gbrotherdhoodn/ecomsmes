@@ -1,0 +1,131 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load thumbnail %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load currency_filters %}
+{% load purchase_info_tags %}
+{% load display_tags %}
+{% load utils_tags %}
+{% block breadcrumbs %}
+    {#    <ul class="breadcrumb">#}
+    {#        <li>#}
+    {#            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>#}
+    {#        </li>#}
+    {#        <li>#}
+    {#            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>#}
+    {#        </li>#}
+    {#        <li>#}
+    {#            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>#}
+    {#        </li>#}
+    {#        <li class="active">#}
+    {#            {{ wishlist.name }}#}
+    {#        </li>#}
+    {#    </ul>#}
+{% endblock %}
+
+{% block tabcontent %}
+    <div class="container">
+        <div class="gdn-title">
+            <h1 class="text-title-3 text-title-4">
+                Barang Favorit
+            </h1>
+        </div>
+        {% if wishlists %}
+            <section id="product-list">
+                <div class="row">
+                    {% for line in wishlists %}
+                        {% with product=line.product %}
+                            {% purchase_info_for_product request product as session %}
+                            <div class="col-lg-3 col-sm-6 col-xs-6 with-margin-bottom">
+                                <article
+                                    class="gdn-product {% if session.availability.is_available_to_buy %}gdn-product-ok{% else %}gdn-product-empty{% endif %}"
+                                >
+                                    <figure>
+                                        {% block product_image %}
+                                            {% with image=product.primary_image %}
+                                                {% thumbnail image.original "x155" upscale=False as thumb %}
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        <picture class="gdn-product-thumb">
+                                                            {% if product.date_created|is_new %}
+                                                                <span
+                                                                    class="right bg-primary text-notice">NEW</span>
+                                                            {% endif %}
+                                                            <span class="open-modal" data-modal="remove-wish-list"
+                                                                  data-href="{% url 'catalogue:ajax-add-delete-wish-list' product.slug product.id %}"
+                                                                  style="background:#fff;z-index: 2; top:2px; left:2px; border-radius: 50%; width: 48px;height: 48px;box-shadow: 0 2px 4px 0 #dcdcdc">
+                                                                <i class="fa fa-trash"
+                                                                   style="padding: 12px 0;text-align: center;vertical-align: middle;"></i>
+                                                            </span>
+                                                            <img src="{{ thumb.url }}"
+                                                                 alt="{{ product.get_title }}">
+                                                        </picture>
+                                                    </a>
+                                                {% endthumbnail %}
+                                            {% endwith %}
+                                        {% endblock %}
+                                        <figcaption>
+                                            {% block product_title %}
+                                                <a class="text-body-1 text-black"
+                                                   href="{{ product.get_absolute_url }}"
+                                                   title="{{ product.get_title }}">
+                                                    {{ product.get_title|truncatewords:4 }}</a>
+                                            {% endblock %}
+                                            {% block product_price %}
+                                                <div class="gdn-product-price">
+                                                    {% include "catalogue/partials/stock_record.html" %}
+                                                </div>
+                                            {% endblock %}
+                                        </figcaption>
+                                    </figure>
+                                </article>
+
+                            </div>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                {% include "partials/pagination.html" %}
+            </section>
+
+            <div class="gdn-modal"
+                 id="remove-wish-list">
+                <div class="gdn-modal-content gdn-modal-content-scroll">
+                    <div class="gdn-modal-header">
+                        <span class="text-title-3">
+                            Hapus Produk
+                        </span>
+                        <button
+                            data-modal="remove-wish-list"
+                            type="button"
+                            class="btn btn-link open-modal text-black gdn-modal-header-close">
+                            <i class="fa ion-android-close"></i>
+                        </button>
+                    </div>
+
+                    <div class="gdn-modal-body">
+                        <span>
+                            Apakah anda yakin menghapus produk ini dari barang favorit ?
+                        </span>
+                    </div>
+                    <div class="gdn-modal-footer">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-xs-6">
+                                <a href="" data-modal="remove-wish-list" class="btn btn-secondary btn-block open-modal">Batal</a>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-xs-6">
+                                <a onclick="" class="btn btn-black btn-block modal-href">Yakin</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            {% with "Kamu belum memiliki barang favorit nih, yuk temukan produk favorit mu sekarang" as wording %}
+                {% include "partials/data-not-found.html" with id="wish-list-not-found" wording=wording button_name="Cari Produk" url="/" id="wish-list-not-found" image="wish-list-not-found.png" grid="col-lg-4 col-sm-8 col-xs-12" %}
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock tabcontent %}

@@ -1,0 +1,100 @@
+---
+app_name: jimshoney
+app_user: "{{ app_name }}"
+
+repo: gramediadigital@vs-ssh.visualstudio.com:v3/gramediadigital/Bisma/jimshoney
+repo_version: develop
+
+py_version: 3.6
+
+jims_db_host: "{{ vault_jims_db_host }}"
+jims_db_pass: "{{ vault_jims_db_pass }}"
+newrelic_api_key: "{{ vault_newrelic_api_key }}"
+
+#LOG
+use_graylog: "True"
+log_req: "True" 
+gen_req_id: "True"
+log_env: "staging"
+log_host: "logs.gramedia.io"
+log_port: "13303"
+log_handler: "graypy.GELFHandler"
+
+#CELERY
+celery_loglevel: INFO
+days_complete: 1
+
+#KGX
+kgx_user: "{{ vault_kgx_user }}"
+kgx_pass: "{{ vault_kgx_pass }}"
+kgx_url: "https://test-api.kgx.co.id/api"
+kgx_zip: "14000"
+
+#SES
+ses_user: "{{ vault_ses_user }}"
+ses_pass: "{{ vault_ses_pass }}"
+ses_url: "smtp.mailtrap.io"
+ses_port: 2525
+ses_tls: True
+
+#gdn_fee
+gdn_fee: "10"
+
+#MAILCHIMP
+mchimp_list: "1fb2df5eb5"
+mchimp_key: "{{ vault_mchimp_key }}"
+
+#ipay
+ipay_url: "https://sandbox.ipay88.co.id/epayment/entry.asp"
+ipay_code: "ID00846"
+ipay_key: "{{ vault_ipay_key }}"
+
+#OSS
+access_key: "{{ vault_oss_ak }}"
+secret_access: "{{ vault_oss_sk }}"
+oss_bucket: "{{ app_user }}"
+oss_region: "ap-southeast-5"
+oss_endpoint: "oss-ap-southeast-5.aliyuncs.com"
+SOLR_HOST : "127.0.0.1"
+DEBUG: "True"
+debug_email: ""
+max_con: 1000
+
+app_vars:
+    - { name: DB_URI_PASS, value: "postgresql://{{ app_name }}:{{ jims_db_pass }}@{{ jims_db_host }}:5432/{{ app_name }}"}
+    - { name: RABBIT_CONN_PASS, value: "amqp://{{ app_name }}:{{ rabbit_pass }}@{{ SOLR_HOST }}/{{ app_name }}"}
+    - { name: NEWRELIC_INI, value: "/srv/{{app_user}}/newrelic.ini" }
+    - { name: AKEY_ID, value: "{{ access_key }}" }
+    - { name: AKEY_PASS, value: "{{ secret_access }}" }
+    - { name: BUCKET_NAME, value: "{{ oss_bucket }}" }
+    - { name: ENDPOINT, value: "{{ oss_endpoint }}" }
+    - { name: DEBUG, value: "{{ DEBUG }}" }
+    - { name: SOLR_HOST, value: "{{ SOLR_HOST }}" }
+    - { name: MEMCACHE_HOST, value: "{{ SOLR_HOST }}" }
+    - { name: GDN_FEE, value: "{{ gdn_fee }}" }
+    - { name: KGX_API_USERNAME, value: "{{ kgx_user }}" }
+    - { name: KGX_API_PASS, value: "{{ kgx_pass }}" }
+    - { name: KGX_API_URL, value: "{{ kgx_url }}"}
+    - { name: KGX_ZIP_CODE, value: "{{ kgx_zip }}"}
+    - { name: THUMBNAIL_DEBUG, value: "{{ DEBUG }}" }
+    - { name: EMAIL_HOST, value: "{{ ses_url }}"}
+    - { name: EMAIL_HOST_USER, value: "{{ ses_user }}"}
+    - { name: EMAIL_HOST_PASS, value: "{{ ses_pass }}"}
+    - { name: EMAIL_PORT, value: "{{ ses_port }}"}
+    - { name: EMAIL_USE_TLS, value: "{{ ses_tls }}"}
+    - { name: DEBUG_EMAIL, value: "{{ debug_email }}"}
+    - { name: USE_GRAYLOG, value: "{{ use_graylog }}"}
+    - { name: LOG_REQUESTS, value: "{{ log_req }}"}
+    - { name: GENERATE_REQ_ID, value: "{{ gen_req_id }}"}
+    - { name: ENVIRONMENT, value: "{{ log_env }}"}
+    - { name: GRAYLOG_HOST, value: "{{ log_host }}"}
+    - { name: GRAYLOG_PORT, value: "{{ log_port }}"}
+    - { name: GRAYLOG_HANDLER, value: "{{ log_handler }}"}
+    - { name: IPAY_URL, value: "{{ ipay_url }}"}
+    - { name: IPAY_CODE, value: "{{ ipay_code }}"}
+    - { name: IPAY_PASS, value: "{{ ipay_key }}"}
+    - { name: MCHIMP_API_PASS, value: "{{ mchimp_key }}"}
+    - { name: MCHIMP_LIST_ID, value: "{{ mchimp_list }}"}
+    - { name: DAYS_COMPLETE, value: "{{ days_complete }}"}
+
+letsencrypt_email: devops@gramedia.digital

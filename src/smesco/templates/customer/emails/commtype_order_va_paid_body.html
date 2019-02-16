@@ -1,0 +1,54 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+{% load staticfiles %}
+{% load function_tags %}
+
+{% block tbody %}
+    {% with order.sources.last as payment %}
+        <tr>
+            <td class="content-wrap">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="content-block content-text">
+                            Halo, {{ order.user.first_name|add:" "|add:order.user.last_name | default:"Pelanggan JimsHoneyOfficial.com" }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-block content-text">
+                            Terima Kasih Sudah Melakukan Pembayaran
+                        </td>
+                    </tr>
+                    {% with payment.source_type as type %}
+                    <tr>
+                        <td class="content-block">
+                            {% if type == "virtual_account" %}
+                                <p class="content-text">
+                                    Pembayaran Ke nomor rekening Virtual Account
+                                    Bank {{ type.name }}
+                                    {{ payment.va_number }}
+                                </p>
+                            {% endif %}
+                            <p class="content-text">
+                                Berhasil. dengan nominal :
+                            </p>
+                            <p class="content-text">
+                                Rp {{ payment.amount_debited|floatformat:"2" }}
+                            </p>
+
+                            <p class="content-text">
+                                Terima kasih sudah memesan barang dari JimsHoney.com
+                                Pesanan Anda dengan Nomor Pesanan <b>{{ order.number }}</b>
+                                Tinggal Menunggu Proses Pengiriman.
+                            </p>
+                            <p class="content-text">
+                                Hari pengiriman akan menyesuaikan dengan tanggal pembayaran dilakukan.
+                            </p>
+                        </td>
+                     {% endwith %}
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    {% endwith %}
+    {% include "customer/emails/partials/order_info.html" with order=order %}
+{% endblock %}

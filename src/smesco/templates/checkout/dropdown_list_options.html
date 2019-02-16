@@ -1,0 +1,6 @@
+<option value="">---------</option>
+{% if list %}
+    {% for val in list %}
+        <option value="{{ val.id }}">{{ val.name }}</option>
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,187 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+{% load l10n %}
+
+{% load currency_filters %}
+{% load thumbnail %}
+{% load purchase_info_tags %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load currency_filters %}
+{% load shipping_tags %}
+{% load utils_tags %}
+
+{% block title %}
+    {% trans "Metode Pembayaran" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=2 %}
+{% endblock %}
+
+{% block sub_header %}
+    <div class="gdn-title">
+        <h1 class="text-title-3 text-title-4">
+            Metode Pembayaran
+        </h1>
+    </div>
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_details %}
+
+    <div id="ikhsan-mahendri" style="display:none">
+        {% block vouchers %}
+            <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_code" class=" control-label required">
+                        Kode
+                    </label>
+                    <input type="text" name="code" maxlength="128" placeholder="Kode" class="TextInput form-control"
+                           value="" id="id_code">
+                    <input type="hidden" name="state" value="{{ shipping_address.province_id|unlocalize }}">
+                    <input type="hidden" name="district" value="{{ shipping_address.regency_district_id|unlocalize }}">
+                    <input type="hidden" name="subdistrict" value="{{ shipping_address.subdistrict_id|unlocalize }}">
+                    <input type="hidden" name="village" value="{{ shipping_address.village_id|unlocalize }}">
+                    <input type="hidden" name="method" value="{{ shipping_method.code|unlocalize }}">
+                </div>
+                <button type="button" class="btn btn-info" data-loading-text="Tambahkan">menambahkan kupon
+                </button>
+            </form>
+            <form id="form-delete-voucher" action="" method="POST">#}
+                {% csrf_token %}
+                <input type="submit" value="{% trans 'Remove' %}" class="btn btn-sm btn-danger"/>
+            </form>
+        {% endblock vouchers %}
+    </div>
+    <form action="{% url 'checkout:payment-details' %}" class="gdn-form checkout-step-parent gtm-basket-id"
+          method="post"
+          id="place_order_form" data-cart="{{ basket.id }}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12 col-lg-8 col-xs-12">
+                <div class="basket-method-payment gdn-checkout-box">
+                    <div class="basket-method-box">
+                        <ul class="display-block ul-list-none gdn-accordian">
+                            {% get_payment_method "virtual_account" as virtual_account %}
+                            {% get_image_bank "virtual_account" as virtual_account_image %}
+                            {% get_payment_method "credit_card" as credit_card %}
+                            {% get_image_bank "credit_card" as credit_card_image %}
+                            {% if virtual_account %}
+                                <li class="basket-method-box-row display-block">
+                                    <label
+                                        id="virtual-account"
+                                        data-select="virtual-account-selected"
+                                        class="check-mark-method-container gdn-accordian-btn ripple"
+                                        data-content="payment-input-form" data-input="true">
+                                        <input name="payments" class="check-accordian"
+                                               value="virtual-account" type="radio">
+                                        <div class="label-name">
+                                            <span
+                                                class="text-body-1">Bank Transfer VA</span>
+                                            <div class="logo-bank">
+                                                <ul class="gdn-list-none">
+                                                    {% for image in virtual_account_image %}
+                                                        <li>
+                                                            <img src="{% static image %}"
+                                                                 alt="">
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <span class="check-mark-method"></span>
+                                    </label>
+                                    <div class="basket-method-box-row-chooose payment-input-form">
+                                        <select id="virtual-account-selected" disabled name="payment-method"
+                                                class="form-control method-payment-chooose">
+                                            <option value="">Pilih Penyedia Virtual Account</option>
+                                            {% for va in virtual_account %}
+                                                <option value="{{ va.code }}">{{ va.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if credit_card %}
+                                <li class="basket-method-box-row display-block">
+                                    <label
+                                        id="credit-card"
+                                        data-select="credit-card-select"
+                                        class="check-mark-method-container gdn-accordian-btn ripple"
+                                        data-content="payment-input-form" data-input="true">
+                                        <input name="payment-method" class="check-accordian"
+                                               value="credit_card" type="radio">
+                                        <div class="label-name">
+                                            <span
+                                                class="text-body-1">Kartu Kredit</span>
+                                            <div class="logo-bank">
+                                                <ul class="gdn-list-none">
+                                                    {% for image in credit_card_image %}
+                                                        <li>
+                                                            <img src="{% static image %}"
+                                                                 alt="">
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <span class="check-mark-method"></span>
+                                    </label>
+                                    <div class="basket-method-box-row-chooose payment-input-form">
+                                        <select disabled name="payment-method" id="credit-card-select"
+                                                class="form-control method-payment-chooose"
+                                                readonly="credit-card">
+                                            {% for va in credit_card %}
+                                                <option value="{{ va.code }}">{{ va.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xs-12 col-lg-4">
+                <div class="basket-summary gdn-checkout-box">
+                    <span class="text-heading-3 with-margin-bottom d-block">Ringkasan Belanja</span>
+                    <div class="basket-summary-box">
+                        {% block order_total %}
+                            {% block basket_total %}
+                                {% include 'checkout/summary_result.html' with voucherForm=True offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts shipping_discounts=basket.shipping_discounts editable=1 %}
+                            {% endblock %}
+                        {% endblock %}
+                    </div>
+                    <input type="hidden" name="action" value="place_order"/>
+                    <div id="next-button">
+                        <button type="submit"
+                                data-step="Payment Method"
+                                data-shipping="{% if shipping_address %}{{ shipping_method.name }}{% endif %}"
+                                class="btn-black btn-lg btn-block gtm-checkout-step"
+                                id="place-order"
+                                disabled>
+                            Lanjutkan Pembayaran
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.init();
+    var options = false
+    {% if PAYMENT_AVAILABLE %}
+        options = "{{ PAYMENT_AVAILABLE|safe }}"
+    {% endif %}
+
+    oscar.onValidationPaymentDetails.init(options);
+    oscar.uiAnimate.showHide();
+{% endblock %}

@@ -1,0 +1,39 @@
+<div class="gdn-nav-mobile">
+    <div class="container">
+        <nav>
+            <ul>
+                <li>
+                    <a href="{{ homepage_url }}" class="{% if home %} active {% endif %}">
+                        <i class="fa ion-android-home"></i>
+                        <span>home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="" class="open-category">
+                        <i class="fa ion-grid"></i>
+                        <span>category</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'basket:summary' %}">
+                        <i class="fa ion-android-cart"></i>
+                        <span>cart</span>
+                    </a>
+                </li>
+                <li>
+                    {% if user.is_authenticated %}
+                        <a href="#" class="open-account-mobile home">
+                            <i class="fa ion-android-person"></i>
+                            <span>account</span>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'customer:login' %}">
+                            <i class="fa ion-android-person"></i>
+                            <span>account</span>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

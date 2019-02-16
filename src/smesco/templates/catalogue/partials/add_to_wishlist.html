@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load wishlist_tags %}
+{% load utils_tags %}
+
+{% if user.is_authenticated %}
+    {% filtering_wishlist user.wishlists product as specific_user_wishlist %}
+    {% with wishlist=specific_user_wishlist %}
+        {% if wishlist %}
+            <div class="gdn-wish-list right">
+                <div class="gdn-wish-list-button heart is-active">
+                </div>
+            </div>
+        {% else %}
+            <div class="gdn-wish-list right">
+                <div class="gdn-wish-list-button heart">
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+{% else %}
+    <div class="gdn-wish-list right">
+        <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}"
+              method="post">
+            {% csrf_token %}
+            <button type="submit" class="gdn-wish-list-button">
+                <i class="fa fa-heart-o" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+{% endif %}

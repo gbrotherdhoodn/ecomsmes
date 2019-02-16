@@ -1,0 +1,5 @@
+---
+- name: Install lessc.
+  npm:
+    name: less
+    global: yes

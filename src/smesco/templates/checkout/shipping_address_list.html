@@ -1,0 +1,33 @@
+{% load currency_filters %}
+{% load i18n %}
+{% load shipping_tags %}
+
+<section id="address-list-modal">
+    {% for form_address in addresses %}
+        {% with form_address.instance as address %}
+            <div
+                class="gdn-checkout-box-address {% if address.is_default_for_billing %}gdn-checkout-box-address-default{% endif %}">
+                <div class="row">
+                    {% for field in address.active_address_fields %}
+                        <div class="col-lg-12 col-xs-12 col-sm-12 address-list-data">
+                            <span class="text-body-3 d-block text-black">{{ field }}</span>
+                        </div>
+                    {% endfor %}
+                    <div class="col-lg-12 col-xs-12 col-sm-12">
+                        <div class="d-flex end-xs middle-xs address-bottom">
+                            {% if not address.is_default_for_billing %}
+                                <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_shipping_address' %}"
+                                   class="btn-link btn">Jadikan Alamat Utama</a>
+                            {% else %}
+                                <span class="text-body-1">Alamat Utama</span>
+                            {% endif %}
+                            <a href="#" data-modal="modal-address-list"
+                               data-open="form-update-address-{{ address.id }}"
+                               class="add-address btn-black btn open-modal" style="margin-left: 10px">Ubah</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+</section>

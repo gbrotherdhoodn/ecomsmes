@@ -1,0 +1,59 @@
+{% load basket_tags %}
+{% load display_tags %}
+{% load i18n %}
+{% load purchase_info_tags %}
+{% load utils_tags %}
+
+{% purchase_info_for_product request product as session %}
+{% if not product.is_parent %}
+    {% if product.is_child %}
+        {% render_variant_descriptors product query_params %}
+    {% endif %}
+    {% if is_variant_available %}
+        {% if session.availability.is_available_to_buy %}
+            <form id="add_to_basket_form" action="{% url 'basket:add' pk=product.pk %}"
+                  method="post" class="add-to-basket">
+                {% csrf_token %}
+                {% basket_form request product as basket_form %}
+                {% include "partials/form_fields.html" with form=basket_form %}
+                <div class="gdn-product-detail-input-quantity-box">
+                    <div class="row between-lg" id="add-product-to-quantity">
+                        <div class="col-lg-5 col-sm-4 col-xs-5">
+                            <div class="gdn-product-detail-input-quantity"
+                                 id="quantity-form">
+                                <button type="button" class="btn btn-secondary min qty-button"
+                                        data-id="min">-
+                                </button>
+                                <input type="number"
+                                       id="qty-number"
+                                       name="quantity"
+                                       class="input-quantity text-body-1"
+                                       placeholder="1"
+                                       value="1" min="1" max="{{ session.stockrecord.num_in_stock }}"
+                                       required
+                                >
+                                <button type="button" class="btn btn-secondary plus qty-button"
+                                        data-id="plus">+
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-sm-8 col-xs-7">
+                            <button
+                                type="submit"
+                                class="btn btn-block btn-black text-bold text-uppercase button-add-to-cart"
+                                data-loading-text="Memproses"
+                            >Masukan Keranjang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        {% endif %}
+    {% else %}
+        <h3>Maaf, Varian Tidak Tersedia.</h3>
+    {% endif %}
+{% else %}
+    {% redirect_page product.children.last.get_absolute_url query_params %}
+{% endif %}

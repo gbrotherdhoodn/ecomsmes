@@ -1,0 +1,51 @@
+{% extends "customer/baseaccountpage.html" %}
+
+
+{% load i18n %}
+
+
+{% block tabcontent %}
+
+    {#        <div class="container container-form">#}
+    {#            {% with style='horizontal' %}#}
+    {#                {% include "partials/form.html" %}#}
+    {#            {% endwith %}#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <div class="container">
+        <div class="gdn-title">
+            <h1 class="text-title-3 text-title-4">
+                Ubah Alamat
+            </h1>
+        </div>
+    </div>
+    <div class="container container-form">
+        <section id="product-list">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    {% include "partials/form.html" %}
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock tabcontent %}
+
+
+{% block onbodyload %}
+    {{ block.super }}
+    var primaryKey = false;
+    {% if form.instance.pk %}
+        primaryKey = {{ form.instance.pk }}
+    {% endif %}
+
+    var address_data = {
+    state:"{% url 'load-address-states' %}",
+    district:"{% url 'load-address-districts' %}",
+    subDistrict:"{% url 'load-address-subdistricts' %}",
+    village:"{% url 'load-address-villages' %}",
+    postCode:"{% url 'load-address-postcode' %}",
+    primaryKey:primaryKey,
+    }
+    oscar.addressEvent.init(address_data);
+{% endblock %}

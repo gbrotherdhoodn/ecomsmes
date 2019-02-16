@@ -1,0 +1,69 @@
+{% if descriptors %}
+    <div class="gdn-product-variant">
+        {% for attribute, value_map in descriptors %}
+            {% with 'Ukuran Warna' as allowed_attribut %}
+                {% if attribute in allowed_attribut.split %}
+                    {#                    <span class="text-body-1 d-block with-margin-bottom">{{ attribute }}</span>#}
+                    <span class="text-body-1 d-block with-margin-bottom">Pilihan {{ attribute }}</span>
+                    <div class="full variant-product-detail">
+                        {% for label, ids in value_map %}
+                            {% if label.id|stringformat:"i" in query_params %}
+                                <span
+                                    type="button"
+                                    class="btn btn-variant mce-btn-large btn-accent variant-size active"
+                                >
+                                    {{ label }}
+                                </span>
+                            {% else %}
+                                <button
+                                    type="button"
+                                    class="btn btn-variant mce-btn-large selvar btn-white-blue variant-size"
+                                    data-attr_type="{{ attribute|lower }}"
+                                    data-attr_val="{{ label.id }}"
+                                >
+                                    {{ label }}
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{##}
+{#{% if descriptors %}#}
+{#    <div class="gdn-product-variant with-margin-bottom">#}
+{#        {% for attribute, value_map in descriptors %}#}
+{#            {% with 'Ukuran Warna' as allowed_attribut %}#}
+{#                {% if attribute in allowed_attribut.split %}#}
+{#                    <span class="gdn-product-variant-label d-block text-body-1">{{ attribute }}</span>#}
+{#                    <div class="full variant-product-detail">#}
+{#                        {% for label, ids in value_map %}#}
+{#                            {% if label.id|stringformat:"i" in query_params %}#}
+{#                                <button#}
+{#                                    type="button"#}
+{#                                    class="btn btn-variant active"#}
+{#                                    disabled#}
+{#                                >#}
+{#                                    {{ label }}#}
+{#                                </button>#}
+{#                            {% else %}#}
+{#                                <button#}
+{#                                    type="button"#}
+{#                                    class="btn btn-variant"#}
+{#                                    data-attr_type="{{ attribute|lower }}"#}
+{#                                    data-attr_val="{{ label.id }}"#}
+{#                                >#}
+{#                                    {{ label }}#}
+{#                                </button>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            {% endwith %}#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#{% endif %}#}
+

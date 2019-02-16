@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% load promotion_tags %}
+
+{% comment %}
+    Keep the same header and footer as the standard layout template but override the
+    main content area to split it into a sidebar and a content block
+{% endcomment %}
+{% block content_wrapper %}
+    <div class="container-fluid page">
+        <div class="gdn-page">
+            <div class="container">
+                {% block breadcrumbs %}{% endblock %}
+                <div class="row between-xs">
+                    <aside class="sidebar col-lg-3 col-sm-12 col-xs-12 sidebar-filter gdn-product-list-left">
+                        <div id="promotions_left">
+                            {% for promotion in promotions_left %}
+                                {% render_promotion promotion %}
+                            {% endfor %}
+                        </div>
+                        {% block column_left %}{% endblock %}
+                    </aside>
+                    <div class="col-lg-9 col-sm-12 col-xs-12">
+                        {% block header %}
+                            <div class="page-header action">
+                                <h1>{% block headertext %}{% endblock %}</h1>
+                            </div>
+                        {% endblock %}
+                        {% include "partials/alert_messages.html" %}
+                        <div id="promotions">
+                            {% for promotion in promotions_page %}
+                                {% render_promotion promotion %}
+                            {% endfor %}
+                        </div>
+
+                        {% block content %}{% endblock %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,63 @@
+---
+- include: setup-postgres-user.yml
+
+- include: install-required-libs.yml
+
+- include: install-less.yml
+
+- include: setup-app-user.yml
+
+- include: deploy-app.yml
+
+- include: register-emperor-vassel.yml
+
+#newrelic APM
+- include : deploy-newrelic-config.yml
+  when : (app_role == "production")
+
+#Nginx
+- include: deploy-configs.yml
+
+- name: Reconfigure nginx SSL config
+  replace:
+    path: /etc/nginx/conf.d/{{ http_hostname }}.conf
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: '#listen 443', replace: 'listen 443' }
+    - { regexp: '#ssl_certificate', replace: 'ssl_certificate' }
+    - { regexp: '#ssl_certificate_key', replace: 'ssl_certificate_key' }
+    - { regexp: '#ssl_trusted_certificate', replace: 'ssl_trusted_certificate' }
+    - { regexp: '#ssl_dhparam', replace: 'ssl_dhparam'}
+  when: app_role != "vagrant"
+
+# Reload
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: Restart Memcache
+  service:
+    name: memcached
+    state: restarted
+    enabled: yes
+  when: (app_role != "production")
+
+- name: Restart Solr
+  service:
+    name: solr
+    state: restarted
+    enabled: yes
+  when: (app_role != "production")
+
+- name: Restart Emperor
+  systemd: 
+    name: uwsgi-emperor
+    daemon_reload: yes
+    state: restarted
+
+- name: Reload UWSGI
+  file:
+    path: /srv/{{ app_user }}/uwsgi.ini
+    state: touch

@@ -1,0 +1,1 @@
+{% load i18n %}Terima kasih telah mengaktifkan akun Anda di JimsHoney.com

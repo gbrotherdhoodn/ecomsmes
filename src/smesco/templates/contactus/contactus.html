@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block title %}
+    Kontak Kami | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="gdn-page gdn-page-contact-us">
+        <div class="container">
+            <ul class="gdn-breadcrumb">
+                <li><a href="{{ homepage_url }}">Beranda</a></li>
+                <li class="active">Kontak Kami</li>
+            </ul>
+            {% block alert_messages %}
+                {% include "partials/alert_messages.html" %}
+            {% endblock %}
+            <div class="row">
+                <div class="col-lg-7 col-sm-12 col-xs-12 with-margin-bottom">
+                    <div class="box-content-without-mobile">
+                        <h2 class="text-heading-1 with-margin-bottom">Kirim Pesan</h2>
+                        <p class="text-body-1">
+                            Punya pertanyaan yang belum dijawab di halaman FAQ ?. Kami siap membantu, silahkan isi form
+                            di bawah ini dan tunggu email balasan Customer Service kami paling lama 1x24 jam.
+                        </p>
+                        <form class="gdn-form" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            {% include 'partials/form_fields.html' with form=form %}
+                            <div class="form-group">
+                                <button class="btn btn-black btn-lg btn-block" data-loading-text="Memproses..."
+                                        type="submit">Kirim
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-sm-12 col-xs-12 with-margin-bottom">
+                    <div class="box-content-without-mobile box-content-without-mobile-top height-auto">
+                        <h2 class="text-heading-1 with-margin-bottom">Atau Hubungi Kami, melalui :</h2>
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12 col-xs-12 with-margin-bottom">
+                                <span class="d-block text-caption">
+                                    Email
+                                </span>
+                                <span class="d-block text-body-1 ellipsis-desktop">icarryjimshoney@gmail.com</span>
+                            </div>
+                            <div class="col-lg-12 col-xs-12 col-xs-12 with-margin-bottom">
+                                <span class="d-block text-caption">
+                                    Telepon
+                                </span>
+                                <span class="d-block text-body-1 ellipsis-desktop">0878 788 20660</span>
+                            </div>
+                            <div class="col-lg-12 col-xs-12 col-xs-12 with-margin-bottom">
+                                <span class="d-block text-caption">
+                                    Whatsapp
+                                </span>
+                                <span class="d-block text-body-1 ellipsis-desktop">0878 788 20660</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
